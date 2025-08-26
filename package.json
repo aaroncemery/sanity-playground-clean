@@ -6,12 +6,16 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "deploy:studio": "cd apps/studio && sanity deploy",
+    "deploy:functions": "npx sanity blueprints deploy",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "@sanity/blueprints": "^0.2.0",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "@sanity/functions": "1.0.3"
   },
   "engines": {
     "node": ">=18"
