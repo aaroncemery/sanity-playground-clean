@@ -12,10 +12,10 @@
   },
   "devDependencies": {
     "@sanity/blueprints": "^0.2.0",
+    "@sanity/functions": "1.0.3",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6",
-    "typescript": "5.9.2",
-    "@sanity/functions": "1.0.3"
+    "typescript": "5.9.2"
   },
   "engines": {
     "node": ">=18"

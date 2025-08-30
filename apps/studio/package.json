@@ -1,5 +1,5 @@
 {
-  "name": "sanity-studio-playground",
+  "name": "studio",
   "private": true,
   "version": "1.0.0",
   "main": "package.json",
@@ -16,6 +16,7 @@
     "sanity"
   ],
   "dependencies": {
+    "@sanity/document-internationalization": "^4.0.0",
     "@sanity/orderable-document-list": "^1.4.0",
     "@sanity/vision": "^4.6.0",
     "lucide-react": "^0.542.0",
