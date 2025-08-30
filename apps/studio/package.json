@@ -6,9 +6,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "sanity dev",
+    "dev:prod": "cp .env.production .env.local && sanity dev",
     "start": "sanity start",
     "build": "sanity build",
-    "deploy": "sanity deploy",
+    "build:prod": "cp .env.production .env.local && sanity build",
+    "deploy": "cp .env.production .env.local && sanity deploy",
+    "deploy:dev": "sanity deploy --source-maps",
     "typegen": " sanity schema extract --enforce-required-fields && sanity typegen generate",
     "deploy-graphql": "sanity graphql deploy"
   },

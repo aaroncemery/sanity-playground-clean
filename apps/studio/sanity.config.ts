@@ -5,6 +5,8 @@ import {schemaTypes} from './src/schemaTypes'
 import {presentationTool} from 'sanity/presentation'
 import {getPresentationUrl} from './src/utils/helper'
 import {locations} from './location'
+import {documentInternationalization} from '@sanity/document-internationalization'
+import {structure} from './src/structure'
 
 import {
   SmartPublishAction,
@@ -17,11 +19,11 @@ export default defineConfig({
   name: 'default',
   title: 'Sanity Studio Playground',
 
-  projectId: 'a09jbdjz',
-  dataset: 'production',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'a09jbdjz',
+  dataset: process.env.SANITY_STUDIO_DATASET || 'production',
 
   plugins: [
-    structureTool(),
+    structureTool({structure}),
     visionTool(),
     presentationTool({
       resolve: {
@@ -33,6 +35,13 @@ export default defineConfig({
           enable: '/api/draft-mode/enable',
         },
       },
+    }),
+    documentInternationalization({
+      supportedLanguages: [
+        {id: 'fr', title: 'French'},
+        {id: 'en', title: 'English'},
+      ],
+      schemaTypes: schemaTypes.map((type) => type.name),
     }),
   ],
 
