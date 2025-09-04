@@ -99,6 +99,12 @@ export const blog = defineType({
       title: 'Content',
       group: GROUP.MAIN_CONTENT,
     }),
+    defineField({
+      name: 'language',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
     ...seoFields,
     ...ogFields,
   ],

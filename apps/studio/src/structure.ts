@@ -1,4 +1,5 @@
 import {StructureResolver} from 'sanity/structure'
+import {contextDocumentTypeName} from '@sanity/assist'
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -6,6 +7,7 @@ export const structure: StructureResolver = (S) =>
     .items([
       // Filter out translation.metadata documents from the main structure
       ...S.documentTypeListItems().filter(
-        (listItem) => !['translation.metadata'].includes(listItem.getId() || '')
+        (listItem) =>
+          !['translation.metadata', contextDocumentTypeName].includes(listItem.getId() || ''),
       ),
     ])

@@ -7,6 +7,7 @@ import {getPresentationUrl} from './src/utils/helper'
 import {locations} from './location'
 import {documentInternationalization} from '@sanity/document-internationalization'
 import {structure} from './src/structure'
+import {assist} from '@sanity/assist'
 
 import {
   SmartPublishAction,
@@ -38,10 +39,30 @@ export default defineConfig({
     }),
     documentInternationalization({
       supportedLanguages: [
-        {id: 'fr', title: 'French'},
         {id: 'en', title: 'English'},
+        {id: 'es', title: 'Spanish'},
+        {id: 'zh', title: 'Chinese (Simplified)'},
+        {id: 'de', title: 'German'},
+        {id: 'fr', title: 'French'},
+        {id: 'pt', title: 'Portuguese'},
       ],
       schemaTypes: schemaTypes.map((type) => type.name),
+    }),
+    assist({
+      translate: {
+        // Style guide for the translation agent. Max 2000 chars.
+        styleguide: 'Be extremely formal and precise. Mimick Spock from Star Trek.',
+        document: {
+          // The name of the field that holds the current language
+          // in the form of a language code e.g. 'en', 'fr', 'nb_NO'.
+          // Required
+          languageField: 'language',
+          // Optional extra filter for document types.
+          // If not set, translation is enabled for all documents
+          // that has a field with the name defined above.
+          documentTypes: ['product', 'blog'],
+        },
+      },
     }),
   ],
 
