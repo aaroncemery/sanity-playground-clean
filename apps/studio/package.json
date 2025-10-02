@@ -17,11 +17,11 @@
   ],
   "dependencies": {
     "@sanity/orderable-document-list": "^1.4.0",
-    "@sanity/vision": "^4.6.0",
+    "@sanity/vision": "^4.10.2",
     "lucide-react": "^0.542.0",
     "react": "^19.1",
     "react-dom": "^19.1",
-    "sanity": "^4.6.0",
+    "sanity": "^4.10.2",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
