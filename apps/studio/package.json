@@ -21,7 +21,7 @@
     "lucide-react": "^0.542.0",
     "react": "^19.1",
     "react-dom": "^19.1",
-    "sanity": "^4.10.2",
+    "sanity": "^4.11.0-next.19",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
