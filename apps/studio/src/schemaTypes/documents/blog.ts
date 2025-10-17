@@ -102,6 +102,12 @@ export const blog = defineType({
       title: 'Content',
       group: GROUP.MAIN_CONTENT,
     }),
+    defineField({
+      name: 'nestedModalTestRichText',
+      type: 'nestedModalTestRichText',
+      title: 'Nested Modal Test Rich Text',
+      group: GROUP.MAIN_CONTENT,
+    }),
     ...seoFields,
     ...ogFields,
   ],
