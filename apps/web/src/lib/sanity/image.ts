@@ -1,6 +1,25 @@
 import imageUrlBuilder from "@sanity/image-url";
 import { client } from "./client";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import type {
+  SanityImageMetadata,
+  SanityImageDimensions,
+  SanityImagePalette,
+} from "./sanity.types";
+
+type SanityImageWithMetadata = {
+  asset?: {
+    metadata?:
+      | SanityImageMetadata
+      | {
+          dimensions?: SanityImageDimensions | null;
+          lqip?: string | null;
+          blurHash?: string | null;
+          palette?: SanityImagePalette | null;
+        }
+      | null;
+  } | null;
+} | null;
 
 const builder = imageUrlBuilder(client);
 
@@ -29,7 +48,9 @@ export function urlFor(source: SanityImageSource) {
  *   blurDataURL={getImageBlurData(image)}
  * />
  */
-export function getImageBlurData(image: any): string | undefined {
+export function getImageBlurData(
+  image: SanityImageWithMetadata,
+): string | undefined {
   // Prefer blurHash (modern, better quality)
   if (image?.asset?.metadata?.blurHash) {
     return image.asset.metadata.blurHash;
@@ -50,7 +71,7 @@ export function getImageBlurData(image: any): string | undefined {
  * @param image - Image object from Sanity query with metadata
  * @returns Object with width and height, or default 16:9
  */
-export function getImageDimensions(image: any): {
+export function getImageDimensions(image: SanityImageWithMetadata): {
   width: number;
   height: number;
 } {
@@ -72,6 +93,8 @@ export function getImageDimensions(image: any): {
  * @param image - Image object from Sanity query with metadata
  * @returns Hex color string, or undefined
  */
-export function getImageDominantColor(image: any): string | undefined {
+export function getImageDominantColor(
+  image: SanityImageWithMetadata,
+): string | undefined {
   return image?.asset?.metadata?.palette?.dominant?.background;
 }

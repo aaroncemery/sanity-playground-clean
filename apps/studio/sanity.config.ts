@@ -1,4 +1,4 @@
-import {defineConfig, QUOTA_EXCLUDED_RELEASES_ENABLED} from 'sanity'
+import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './src/schemaTypes'
@@ -39,7 +39,6 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
-  [QUOTA_EXCLUDED_RELEASES_ENABLED]: true,
 
   document: {
     actions: (prev, context) => {

@@ -2,12 +2,16 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { client } from "@/lib/sanity/client";
 import { REDIRECT_BY_PATH } from "@/lib/sanity/queries";
+import type { REDIRECT_BY_PATH_RESULT } from "@/lib/sanity/sanity.types";
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Query for redirect matching the current pathname
-  const redirect = await client.fetch(REDIRECT_BY_PATH, { pathname });
+  const redirect = await client.fetch<REDIRECT_BY_PATH_RESULT>(
+    REDIRECT_BY_PATH,
+    { pathname },
+  );
 
   if (redirect) {
     const url =

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Border } from "@/components/Border";
 import { Button } from "@/components/Button";
 import { BLOG_POST } from "@/lib/sanity/queries";
-import { BLOG_POSTResult } from "@/lib/sanity/sanity.types";
+import { BLOG_POST_RESULT } from "@/lib/sanity/sanity.types";
 import {
   urlFor,
   getImageBlurData,
@@ -15,7 +15,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 
 // Function to fetch blog post data
-async function getBlogPost(slug: string): Promise<BLOG_POSTResult> {
+async function getBlogPost(slug: string): Promise<BLOG_POST_RESULT> {
   try {
     // Add blog/ prefix to match the slug format in Sanity
     const fullSlug = `blog/${slug}`;
@@ -88,9 +88,7 @@ export default async function BlogPostPage({
               <div className="relative mb-12">
                 <Image
                   src={urlFor(post.image).width(2400).height(1260).url()}
-                  alt={
-                    (post.image as any)?.alt || post.title || "Blog post image"
-                  }
+                  alt={post.image?.alt || post.title || "Blog post image"}
                   className="w-full rounded-2xl object-cover shadow-lg"
                   width={dimensions.width}
                   height={dimensions.height}

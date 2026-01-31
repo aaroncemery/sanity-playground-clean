@@ -9,16 +9,9 @@ import { Border } from "@/components/Border";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
+import type { BLOG_POSTS_RESULT } from "@/lib/sanity/sanity.types";
 
-// Temporary type until TypeGen is re-run
-type BlogPost = {
-  _id: string;
-  title: string;
-  description?: string;
-  slug: string;
-  image?: any;
-  publishedAt: string;
-};
+type BlogPost = BLOG_POSTS_RESULT[number];
 
 export default async function BlogPage() {
   const response = await sanityFetch({
@@ -82,7 +75,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
         <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={urlFor(post.image).width(600).height(340).url()}
-            alt={(post.image as any)?.alt || post.title || "Blog post image"}
+            alt={post.image?.alt || post.title || "Blog post image"}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             width={600}
             height={340}
