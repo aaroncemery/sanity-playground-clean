@@ -16,17 +16,17 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/orderable-document-list": "^1.4.0",
-    "@sanity/vision": "^4.11.0-next.19",
-    "lucide-react": "^0.542.0",
-    "react": "^19.1",
-    "react-dom": "^19.1",
-    "sanity": "^4.11.0-next.19",
+    "@sanity/orderable-document-list": "^1.5.0",
+    "@sanity/vision": "^5.7.0",
+    "lucide-react": "^0.469.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sanity": "^5.7.0",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "^5.0.2",
-    "@types/react": "^19.1",
+    "@types/react": "^19.1.0",
     "eslint": "^9.28",
     "prettier": "^3.5",
     "typescript": "^5.8"

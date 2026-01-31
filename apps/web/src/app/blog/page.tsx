@@ -1,17 +1,30 @@
 import { BLOG_POSTS } from "@/lib/sanity/queries";
 import { sanityFetch } from "@/lib/sanity/live";
-import { BLOG_POSTSResult } from "@/lib/sanity/sanity.types";
-import { urlFor } from "@/lib/sanity/image";
+import {
+  urlFor,
+  getImageBlurData,
+  getImageDimensions,
+} from "@/lib/sanity/image";
 import { Border } from "@/components/Border";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 
+// Temporary type until TypeGen is re-run
+type BlogPost = {
+  _id: string;
+  title: string;
+  description?: string;
+  slug: string;
+  image?: any;
+  publishedAt: string;
+};
+
 export default async function BlogPage() {
   const response = await sanityFetch({
     query: BLOG_POSTS,
   });
-  const posts = response.data;
+  const posts: BlogPost[] = response.data || [];
 
   return (
     <div className="min-h-screen bg-white">
@@ -49,15 +62,18 @@ export default async function BlogPage() {
 }
 
 // Blog Post Card Component
-function BlogPostCard({ post }: { post: BLOG_POSTSResult[0] }) {
-  // Extract slug without blog/ prefix for the URL
-  const slugWithoutPrefix = post.slug.current.replace("blog/", "");
+function BlogPostCard({ post }: { post: BlogPost }) {
+  // Slug is already cleaned in the query, but ensure no prefix
+  const slugWithoutPrefix = post.slug.replace("blog/", "");
 
   const publishedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  const dimensions = getImageDimensions(post.image);
+  const blurData = getImageBlurData(post.image);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200 hover:shadow-lg transition-all duration-300">
@@ -66,10 +82,12 @@ function BlogPostCard({ post }: { post: BLOG_POSTSResult[0] }) {
         <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={urlFor(post.image).width(600).height(340).url()}
-            alt={post.title || "Blog post image"}
+            alt={(post.image as any)?.alt || post.title || "Blog post image"}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             width={600}
             height={340}
+            placeholder={blurData ? "blur" : "empty"}
+            blurDataURL={blurData}
           />
         </div>
       )}

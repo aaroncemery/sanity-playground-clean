@@ -7,14 +7,17 @@ export const locations = {
       slug: 'slug.current',
     },
     resolve: (doc) => {
+      // Remove 'blog/' prefix if it exists in the slug
+      const slugWithoutPrefix = doc?.slug?.replace('blog/', '') || ''
+
       return {
         locations: [
           {
             title: doc?.title || 'Untitled',
-            href: `${doc?.slug}`,
+            href: `/blog/${slugWithoutPrefix}`,
           },
           {
-            title: 'Blog',
+            title: 'Blog Index',
             href: '/blog',
           },
         ],
@@ -47,7 +50,7 @@ export const locations = {
         locations: [
           {
             title: doc?.title || 'Untitled',
-            href: `${doc?.slug}`,
+            href: `/${doc?.slug || ''}`,
           },
         ],
       }

@@ -2,8 +2,6 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
 import {ScanBarcode} from 'lucide-react'
 
 import {GROUP, GROUPS} from '../../utils/constant'
-import {ogFields} from '../../utils/og-fields'
-import {seoFields} from '../../utils/seo-fields'
 import {isUnique} from '../../utils/slug'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
@@ -25,6 +23,11 @@ export const product = defineType({
       description:
         'The title of the product. This will be displayed in the product list and on the product page.',
       group: GROUP.MAIN_CONTENT,
+      validation: (rule) => [
+        rule.required().error('A title is required'),
+        rule.min(3).warning('Title should be at least 3 characters'),
+        rule.max(80).warning('Title should be less than 80 characters for optimal display'),
+      ],
     }),
     defineField({
       name: 'slug',
@@ -65,8 +68,18 @@ export const product = defineType({
         disableActions: ['add', 'remove', 'duplicate'],
       },
     }),
-    ...ogFields,
-    ...seoFields,
+    defineField({
+      name: 'seo',
+      type: 'seo',
+      title: 'SEO',
+      group: GROUP.SEO,
+    }),
+    defineField({
+      name: 'openGraph',
+      type: 'openGraph',
+      title: 'Open Graph',
+      group: GROUP.OG,
+    }),
     defineField({
       name: 'workflowMetadata',
       type: 'workflowMetadata',

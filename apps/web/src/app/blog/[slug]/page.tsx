@@ -5,7 +5,11 @@ import { Border } from "@/components/Border";
 import { Button } from "@/components/Button";
 import { BLOG_POST } from "@/lib/sanity/queries";
 import { BLOG_POSTResult } from "@/lib/sanity/sanity.types";
-import { urlFor } from "@/lib/sanity/image";
+import {
+  urlFor,
+  getImageBlurData,
+  getImageDimensions,
+} from "@/lib/sanity/image";
 import { portableTextComponents } from "@/lib/utils/ptRender";
 import Image from "next/image";
 import { Metadata } from "next";
@@ -44,7 +48,8 @@ export default async function BlogPostPage({
     day: "numeric",
   });
 
-  const heroImage = urlFor(post.image).width(2400).height(1260).url();
+  const dimensions = getImageDimensions(post.image);
+  const blurData = getImageBlurData(post.image);
 
   return (
     <>
@@ -82,12 +87,16 @@ export default async function BlogPostPage({
             {post.image && (
               <div className="relative mb-12">
                 <Image
-                  src={heroImage}
-                  alt={post.title || "Blog post image"}
+                  src={urlFor(post.image).width(2400).height(1260).url()}
+                  alt={
+                    (post.image as any)?.alt || post.title || "Blog post image"
+                  }
                   className="w-full rounded-2xl object-cover shadow-lg"
-                  style={{ aspectRatio: "16/9" }}
-                  width={1200}
-                  height={675}
+                  width={dimensions.width}
+                  height={dimensions.height}
+                  placeholder={blurData ? "blur" : "empty"}
+                  blurDataURL={blurData}
+                  priority
                 />
               </div>
             )}

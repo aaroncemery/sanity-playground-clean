@@ -1,4 +1,5 @@
 import {richText} from './rich-text'
+import {seo, openGraph} from './seo'
 import {workflowMetadata} from './workflow-metadata'
 import {workflowStatus} from './workflow-status'
 import {
@@ -10,6 +11,8 @@ import {
 
 export const definitions = [
   richText,
+  seo,
+  openGraph,
   workflowMetadata,
   workflowStatus,
   nestedModalLevel1,

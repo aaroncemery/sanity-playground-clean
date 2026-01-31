@@ -3,8 +3,6 @@ import {FileTextIcon} from 'lucide-react'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 import {GROUP, GROUPS} from '../../utils/constant'
-import {ogFields} from '../../utils/og-fields'
-import {seoFields} from '../../utils/seo-fields'
 import {isUnique} from '../../utils/slug'
 
 export const blog = defineType({
@@ -17,7 +15,6 @@ export const blog = defineType({
   description:
     'A post that will be published on the website. Add a title, description, autor, and content to create a new post.',
   fields: [
-    orderRankField({type: 'blog'}),
     defineField({
       name: 'title',
       type: 'string',
@@ -25,6 +22,11 @@ export const blog = defineType({
       description:
         'The title of the post. This will be displayed in the post list and on the post page.',
       group: GROUP.MAIN_CONTENT,
+      validation: (rule) => [
+        rule.required().error('A title is required'),
+        rule.min(10).warning('Title should be at least 10 characters for better readability'),
+        rule.max(100).warning('Title should be less than 100 characters for optimal SEO'),
+      ],
     }),
     defineField({
       name: 'description',
@@ -35,6 +37,7 @@ export const blog = defineType({
         'The description of the post. This will be displayed in the post list and on the post page.',
       group: GROUP.MAIN_CONTENT,
       validation: (rule) => [
+        rule.required().error('A description is required'),
         rule
           .min(140)
           .warning('The description should be at least 140 characters for optimal SEO visibility'),
@@ -101,6 +104,7 @@ export const blog = defineType({
       type: 'richText',
       title: 'Content',
       group: GROUP.MAIN_CONTENT,
+      validation: (rule) => rule.required().error('Content is required'),
     }),
     defineField({
       name: 'nestedModalTestRichText',
@@ -108,15 +112,25 @@ export const blog = defineType({
       title: 'Nested Modal Test Rich Text',
       group: GROUP.MAIN_CONTENT,
     }),
-    ...seoFields,
-    ...ogFields,
+    defineField({
+      name: 'seo',
+      type: 'seo',
+      title: 'SEO',
+      group: GROUP.SEO,
+    }),
+    defineField({
+      name: 'openGraph',
+      type: 'openGraph',
+      title: 'Open Graph',
+      group: GROUP.OG,
+    }),
   ],
   preview: {
     select: {
       title: 'title',
       media: 'image',
-      isPrivate: 'seoNoIndex',
-      isHidden: 'seoHideFromLists',
+      isPrivate: 'seo.noIndex',
+      isHidden: 'seo.hideFromLists',
       slug: 'slug.current',
       publishDate: 'publishedAt',
     },
