@@ -12,18 +12,65 @@ const richTextMembers = [
       {title: 'H4', value: 'h4'},
       {title: 'H5', value: 'h5'},
       {title: 'H6', value: 'h6'},
-      {title: 'Inline', value: 'inline'},
+      {title: 'Quote', value: 'blockquote'},
     ],
     lists: [
       {title: 'Numbered', value: 'number'},
       {title: 'Bullet', value: 'bullet'},
     ],
     marks: {
-      annotations: [],
+      annotations: [
+        defineField({
+          name: 'link',
+          type: 'object',
+          title: 'External Link',
+          icon: LinkIcon,
+          fields: [
+            defineField({
+              name: 'href',
+              type: 'url',
+              title: 'URL',
+              description: 'Link to external website (e.g., https://example.com)',
+              validation: (rule) => [
+                rule.required().error('URL is required'),
+                rule.uri({
+                  scheme: ['http', 'https', 'mailto', 'tel'],
+                  allowRelative: false,
+                }),
+              ],
+            }),
+            defineField({
+              name: 'openInNewTab',
+              type: 'boolean',
+              title: 'Open in new tab',
+              description: 'Open link in new browser tab',
+              initialValue: true,
+            }),
+          ],
+        }),
+        defineField({
+          name: 'internalLink',
+          type: 'object',
+          title: 'Internal Link',
+          icon: LinkIcon,
+          fields: [
+            defineField({
+              name: 'reference',
+              type: 'reference',
+              title: 'Reference',
+              description: 'Link to another page on your site',
+              to: [{type: 'blog'}],
+              validation: (rule) => rule.required().error('Please select a page to link to'),
+            }),
+          ],
+        }),
+      ],
       decorators: [
         {title: 'Strong', value: 'strong'},
         {title: 'Emphasis', value: 'em'},
         {title: 'Code', value: 'code'},
+        {title: 'Underline', value: 'underline'},
+        {title: 'Strike', value: 'strike-through'},
       ],
     },
   }),
@@ -37,9 +84,17 @@ const richTextMembers = [
     },
     fields: [
       defineField({
+        name: 'alt',
+        type: 'string',
+        title: 'Alternative Text',
+        description: 'Important for SEO and accessibility',
+        validation: (rule) => rule.required().error('Alt text is required for accessibility'),
+      }),
+      defineField({
         name: 'caption',
         type: 'string',
-        title: 'Caption Text',
+        title: 'Caption',
+        description: 'Optional caption displayed below the image',
       }),
     ],
   }),

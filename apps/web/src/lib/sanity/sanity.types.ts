@@ -13,65 +13,93 @@
  */
 
 // Source: schema.json
-export type Blog = {
-  _id: string;
-  _type: "blog";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  orderRank?: string;
+export type LeftRightContent = {
+  _type: "leftRightContent";
   title?: string;
   description?: string;
-  slug: Slug;
-  publishedAt: string;
-  image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  content?: Array<{
+  leftContent?: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
       _type: "span";
       _key: string;
     }>;
-    style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-    listItem?: "number" | "bullet";
-    markDefs?: null;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
     level?: number;
     _type: "block";
     _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    caption?: string;
-    _type: "image";
+  }>;
+  rightContent?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
     _key: string;
   }>;
+};
+
+export type Hero = {
+  _type: "hero";
+  title?: string;
+};
+
+export type Redirect = {
+  _id: string;
+  _type: "redirect";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  from: string;
+  to: string;
+  type: "internal" | "external";
+  permanent?: boolean;
+};
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type ProductAutoIncrement = {
+  _id: string;
+  _type: "productAutoIncrement";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderRank?: string;
+  title?: string;
+  autoId?: number;
+  slug: Slug;
+  pageSections?: Array<
+    {
+      _key: string;
+    } & Hero
+  >;
+  ogTitle?: string;
+  ogDescription?: string;
   seoTitle?: string;
   seoDescription?: string;
   seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -79,37 +107,289 @@ export type Blog = {
   };
   seoNoIndex?: boolean;
   seoHideFromLists?: boolean;
-  ogTitle?: string;
-  ogDescription?: string;
+  workflowMetadata?: WorkflowMetadata;
 };
 
-export type RichText = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
+export type WorkflowMetadata = {
+  _type: "workflowMetadata";
+  workflowStatus?: WorkflowStatus;
+  submittedAt?: string;
+  submittedBy?: string;
+  approvedAt?: string;
+  approvedBy?: string;
+  rejectionReason?: string;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type Counter = {
+  _id: string;
+  _type: "counter";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  value?: number;
+};
+
+export type Product = {
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderRank?: string;
+  title: string;
+  slug: Slug;
+  pageSections?: Array<
+    {
+      _key: string;
+    } & Hero
+  >;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+  workflowMetadata?: WorkflowMetadata;
+};
+
+export type OpenGraph = {
+  _type: "openGraph";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  noIndex?: boolean;
+  hideFromLists?: boolean;
+};
+
+export type NestedModalTestRichText = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | ({
+      _key: string;
+    } & NestedModalLevel1)
+>;
+
+export type NestedModalLevel3 = {
+  _type: "nestedModalLevel3";
+  content?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
     _key: string;
   }>;
-  style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-  listItem?: "number" | "bullet";
-  markDefs?: null;
-  level?: number;
-  _type: "block";
-  _key: string;
-} | {
-  asset?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type NestedModalLevel2 = {
+  _type: "nestedModalLevel2";
+  content?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "normal"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "blockquote";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | ({
+        _key: string;
+      } & NestedModalLevel3)
+  >;
+};
+
+export type NestedModalLevel1 = {
+  _type: "nestedModalLevel1";
+  content?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?:
+          | "normal"
+          | "h1"
+          | "h2"
+          | "h3"
+          | "h4"
+          | "h5"
+          | "h6"
+          | "blockquote";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | ({
+        _key: string;
+      } & NestedModalLevel2)
+  >;
+};
+
+export type WorkflowStatus =
+  | "draft"
+  | "in-review"
+  | "approved"
+  | "published"
+  | "rejected";
+
+export type BlogReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "blog";
+};
+
+export type RichText = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+      listItem?: "number" | "bullet";
+      markDefs?: Array<
+        | {
+            href: string;
+            openInNewTab?: boolean;
+            _type: "link";
+            _key: string;
+          }
+        | {
+            reference: BlogReference;
+            _type: "internalLink";
+            _key: string;
+          }
+      >;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      _type: "image";
+      _key: string;
+    }
+>;
+
+export type Blog = {
+  _id: string;
+  _type: "blog";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  description: string;
+  slug: Slug;
+  publishedAt: string;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
   };
-  media?: unknown;
-  hotspot?: SanityImageHotspot;
-  crop?: SanityImageCrop;
-  caption?: string;
-  _type: "image";
-  _key: string;
-}>;
+  content: RichText;
+  nestedModalTestRichText?: NestedModalTestRichText;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+};
 
 export type SanityImagePaletteSwatch = {
   _type: "sanity.imagePaletteSwatch";
@@ -132,25 +412,21 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+export type SanityImageMetadata = {
+  _type: "sanity.imageMetadata";
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  thumbHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -173,6 +449,13 @@ export type SanityFileAsset = {
   path?: string;
   url?: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -198,17 +481,6 @@ export type SanityImageAsset = {
   source?: SanityAssetSourceData;
 };
 
-export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
-
 export type Geopoint = {
   _type: "geopoint";
   lat?: number;
@@ -216,97 +488,149 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
+export type AllSanitySchemaTypes =
+  | LeftRightContent
+  | Hero
+  | Redirect
+  | SanityImageAssetReference
+  | ProductAutoIncrement
+  | WorkflowMetadata
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Slug
+  | Counter
+  | Product
+  | OpenGraph
+  | Seo
+  | NestedModalTestRichText
+  | NestedModalLevel3
+  | NestedModalLevel2
+  | NestedModalLevel1
+  | WorkflowStatus
+  | BlogReference
+  | RichText
+  | Blog
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageMetadata
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
+  | Geopoint;
 
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
-export type AllSanitySchemaTypes = Blog | RichText | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+
+type ArrayOf<T> = Array<
+  T & {
+    _key: string;
+  }
+>;
+
 // Source: ../web/src/lib/sanity/queries.ts
 // Variable: BLOG_POSTS
-// Query: *[_type == "blog"] | order(publishedAt desc) {    _id,    title,    description,    slug,    image,    publishedAt,  }
-export type BLOG_POSTSResult = Array<{
+// Query: *[_type == "blog" && !seo.noIndex] | order(publishedAt desc) {    _id,    _type,    _createdAt,    _updatedAt,    title,    description,    "slug": slug.current,    image {      asset->{        _ref,        metadata {          dimensions,          lqip,          blurHash,          palette        }      },      hotspot,      crop,      alt    },    publishedAt,    "seoNoIndex": seo.noIndex,    "seoHideFromLists": seo.hideFromLists  }
+export type BLOG_POSTS_RESULT = Array<{
   _id: string;
-  title: string | null;
-  description: string | null;
-  slug: Slug;
+  _type: "blog";
+  _createdAt: string;
+  _updatedAt: string;
+  title: string;
+  description: string;
+  slug: string;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
+    asset: {
+      _ref: null;
+      metadata: {
+        dimensions: SanityImageDimensions | null;
+        lqip: string | null;
+        blurHash: string | null;
+        palette: SanityImagePalette | null;
+      } | null;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    alt: null;
   };
   publishedAt: string;
+  seoNoIndex: boolean | null;
+  seoHideFromLists: boolean | null;
 }>;
+
+// Source: ../web/src/lib/sanity/queries.ts
 // Variable: BLOG_POST
-// Query: *[  _type == "blog"  && slug.current == $slug][0]{  _id,  title,  description,  slug,  image,  publishedAt,  content}
-export type BLOG_POSTResult = {
+// Query: *[_type == "blog" && slug.current == $slug][0]{    _id,    _type,    _createdAt,    _updatedAt,    title,    description,    "slug": slug.current,    image {      asset->{        _ref,        metadata {          dimensions,          lqip,          blurHash,          palette        }      },      hotspot,      crop,      alt    },    publishedAt,    content,    seo {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      },      noIndex,      hideFromLists    },    openGraph {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      }    }  }
+export type BLOG_POST_RESULT = {
   _id: string;
-  title: string | null;
-  description: string | null;
-  slug: Slug;
+  _type: "blog";
+  _createdAt: string;
+  _updatedAt: string;
+  title: string;
+  description: string;
+  slug: string;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
+    asset: {
+      _ref: null;
+      metadata: {
+        dimensions: SanityImageDimensions | null;
+        lqip: string | null;
+        blurHash: string | null;
+        palette: SanityImagePalette | null;
+      } | null;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+    alt: null;
   };
   publishedAt: string;
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: null;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }> | null;
+  content: RichText;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+    noIndex: boolean | null;
+    hideFromLists: boolean | null;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+} | null;
+
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: REDIRECT_BY_PATH
+// Query: *[_type == "redirect" && from == $pathname][0]{    _id,    from,    to,    type,    permanent  }
+export type REDIRECT_BY_PATH_RESULT = {
+  _id: string;
+  from: string;
+  to: string;
+  type: "external" | "internal";
+  permanent: boolean | null;
 } | null;
 
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n  *[_type == \"blog\"] | order(publishedAt desc) {\n    _id,\n    title,\n    description,\n    slug,\n    image,\n    publishedAt,\n  }\n": BLOG_POSTSResult;
-    "*[\n  _type == \"blog\"\n  && slug.current == $slug\n][0]{\n  _id,\n  title,\n  description,\n  slug,\n  image,\n  publishedAt,\n  content\n}": BLOG_POSTResult;
+    '\n  *[_type == "blog" && !seo.noIndex] | order(publishedAt desc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    description,\n    "slug": slug.current,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash,\n          palette\n        }\n      },\n      hotspot,\n      crop,\n      alt\n    },\n    publishedAt,\n    "seoNoIndex": seo.noIndex,\n    "seoHideFromLists": seo.hideFromLists\n  }\n': BLOG_POSTS_RESULT;
+    '\n  *[_type == "blog" && slug.current == $slug][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    description,\n    "slug": slug.current,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash,\n          palette\n        }\n      },\n      hotspot,\n      crop,\n      alt\n    },\n    publishedAt,\n    content,\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': BLOG_POST_RESULT;
+    '\n  *[_type == "redirect" && from == $pathname][0]{\n    _id,\n    from,\n    to,\n    type,\n    permanent\n  }\n': REDIRECT_BY_PATH_RESULT;
   }
 }
