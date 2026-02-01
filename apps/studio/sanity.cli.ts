@@ -19,4 +19,7 @@ export default defineCliConfig({
     generates: '../../apps/web/src/lib/sanity/sanity.types.ts',
     formatGeneratedCode: true,
   },
+  mediaLibrary: {
+    aspectsPath: 'src/aspects',
+  },
 })

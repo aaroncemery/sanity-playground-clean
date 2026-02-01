@@ -8,6 +8,7 @@ import {
   nestedModalLevel3,
   nestedModalTestRichText,
 } from './nested-modal-test'
+import {link} from './link'
 
 export const definitions = [
   richText,
@@ -19,4 +20,5 @@ export const definitions = [
   nestedModalLevel2,
   nestedModalLevel3,
   nestedModalTestRichText,
+  link,
 ]

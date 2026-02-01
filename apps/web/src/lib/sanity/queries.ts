@@ -104,3 +104,288 @@ export const REDIRECT_BY_PATH = defineQuery(`
     permanent
   }
 `);
+
+/**
+ * Query the singleton homepage
+ */
+export const HOME = defineQuery(`
+  *[_type == "home" && _id == "home"][0]{
+    _id,
+    _type,
+    title,
+    pageSections[] {
+      _type,
+      _key,
+      _type == "hero" => {
+        headline,
+        subtext,
+        primaryCta,
+        secondaryCta,
+        media {
+          ...,
+          asset->
+        },
+        variant,
+        backgroundVariant
+      },
+      _type == "features" => {
+        title,
+        description,
+        layout,
+        features[] {
+          icon,
+          title,
+          description
+        }
+      },
+      _type == "textMedia" => {
+        heading,
+        content,
+        media {
+          asset->{
+            _ref,
+            metadata {
+              dimensions,
+              lqip,
+              blurHash,
+              palette
+            }
+          },
+          hotspot,
+          crop,
+          alt
+        },
+        mediaPosition,
+        reverse
+      },
+      _type == "ctaSection" => {
+        heading,
+        description,
+        primaryButton {
+          text,
+          link
+        },
+        secondaryButton {
+          text,
+          link
+        },
+        backgroundVariant
+      },
+      _type == "faqSection" => {
+        title,
+        faqs[] {
+          question,
+          answer
+        }
+      },
+      _type == "statsSection" => {
+        title,
+        layout,
+        stats[] {
+          value,
+          label,
+          description
+        }
+      },
+      _type == "testimonials" => {
+        title,
+        testimonials[] {
+          quote,
+          author,
+          role,
+          company,
+          avatar {
+            asset->{
+              _ref,
+              metadata {
+                dimensions
+              }
+            },
+            hotspot,
+            crop,
+            alt
+          }
+        }
+      }
+    },
+    seo {
+      title,
+      description,
+      image {
+        asset->{
+          _ref,
+          metadata {
+            dimensions,
+            blurHash
+          }
+        }
+      },
+      noIndex,
+      hideFromLists
+    },
+    openGraph {
+      title,
+      description,
+      image {
+        asset->{
+          _ref,
+          metadata {
+            dimensions,
+            blurHash
+          }
+        }
+      }
+    }
+  }
+`);
+
+/**
+ * Query a page by slug with all page sections
+ */
+export const PAGE_BY_SLUG = defineQuery(`
+  *[_type == "page" && slug.current == $slug][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    pageSections[] {
+      _type,
+      _key,
+      _type == "hero" => {
+        headline,
+        subtext,
+        primaryCta {
+          text,
+          link
+        },
+        secondaryCta {
+          text,
+          link
+        },
+        media {
+          asset->{
+            _ref,
+            metadata {
+              dimensions,
+              lqip,
+              blurHash,
+              palette
+            }
+          },
+          hotspot,
+          crop,
+          alt
+        },
+        variant,
+        backgroundVariant
+      },
+      _type == "features" => {
+        title,
+        description,
+        layout,
+        features[] {
+          icon,
+          title,
+          description
+        }
+      },
+      _type == "textMedia" => {
+        heading,
+        content,
+        media {
+          asset->{
+            _ref,
+            metadata {
+              dimensions,
+              lqip,
+              blurHash,
+              palette
+            }
+          },
+          hotspot,
+          crop,
+          alt
+        },
+        mediaPosition,
+        reverse
+      },
+      _type == "ctaSection" => {
+        heading,
+        description,
+        primaryButton {
+          text,
+          link
+        },
+        secondaryButton {
+          text,
+          link
+        },
+        backgroundVariant
+      },
+      _type == "faqSection" => {
+        title,
+        faqs[] {
+          question,
+          answer
+        }
+      },
+      _type == "statsSection" => {
+        title,
+        layout,
+        stats[] {
+          value,
+          label,
+          description
+        }
+      },
+      _type == "testimonials" => {
+        title,
+        testimonials[] {
+          quote,
+          author,
+          role,
+          company,
+          avatar {
+            asset->{
+              _ref,
+              metadata {
+                dimensions
+              }
+            },
+            hotspot,
+            crop,
+            alt
+          }
+        }
+      }
+    },
+    seo {
+      title,
+      description,
+      image {
+        asset->{
+          _ref,
+          metadata {
+            dimensions,
+            blurHash
+          }
+        }
+      },
+      noIndex,
+      hideFromLists
+    },
+    openGraph {
+      title,
+      description,
+      image {
+        asset->{
+          _ref,
+          metadata {
+            dimensions,
+            blurHash
+          }
+        }
+      }
+    }
+  }
+`);

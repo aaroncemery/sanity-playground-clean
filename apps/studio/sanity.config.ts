@@ -20,8 +20,63 @@ export default defineConfig({
   projectId: 'a09jbdjz',
   dataset: 'production',
 
+  mediaLibrary: {
+    enabled: true,
+  },
+  auth: {
+    loginMethod: 'token',
+  },
+
+  form: {
+    // Disable the default asset source for images (use Media Library instead)
+    image: {
+      assetSources: (previousSources) => {
+        return previousSources.filter((source) => source.name !== 'sanity-default')
+      },
+    },
+    // Disable the default asset source for files (use Media Library instead)
+    file: {
+      assetSources: (previousSources) => {
+        return previousSources.filter((source) => source.name !== 'sanity-default')
+      },
+    },
+  },
+
   plugins: [
-    structureTool(),
+    structureTool({
+      structure: (S: any) =>
+        S.list()
+          .title('Content')
+          .items([
+            // Settings section
+            S.listItem()
+              .title('Settings')
+              .icon(() => '⚙️')
+              .child(
+                S.list()
+                  .title('Settings')
+                  .items([
+                    S.documentTypeListItem('navigation')
+                      .title('Navigation')
+                      .icon(() => '📱'),
+                    S.documentTypeListItem('footer')
+                      .title('Footer')
+                      .icon(() => '📄'),
+                  ]),
+              ),
+            S.divider(),
+            // Singleton Homepage at the top
+            S.listItem()
+              .title('Homepage')
+              .icon(() => '🏠')
+              .child(S.document().schemaType('home').documentId('home')),
+            S.divider(),
+            // All other document types (excluding home, navigation, and footer)
+            ...S.documentTypeListItems().filter(
+              (item: any) => !['home', 'navigation', 'footer'].includes(item.getId() || ''),
+            ),
+          ]),
+    }),
     visionTool(),
     presentationTool({
       resolve: {
