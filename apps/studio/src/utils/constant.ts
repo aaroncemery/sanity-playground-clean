@@ -1,4 +1,4 @@
-import {BlockElementIcon, ComposeIcon, CogIcon, InsertAboveIcon, SearchIcon} from '@sanity/icons'
+import {ComposeIcon, CogIcon, InsertAboveIcon, SearchIcon} from '@sanity/icons'
 import type {FieldGroupDefinition} from 'sanity'
 import {ALL_FIELDS_GROUP} from 'sanity'
 

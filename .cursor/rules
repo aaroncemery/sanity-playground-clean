@@ -1,167 +1,239 @@
 # Sanity Project
 
-This is a Sanity-powered project. Use the Knowledge Router below to find Sanity guidance for your task.
+## Project Overview
 
-## Commands
+This is a **Turbo monorepo** combining a Sanity Studio with a Next.js web application. The project demonstrates Sanity's Visual Editing, custom workflows, serverless functions (blueprints), and redirect management.
 
+**Sanity Project:**
+- Project ID: `a09jbdjz`
+- Dataset: `production`
+- Studio runs on port 3333
+
+## Development Commands
+
+### Root Level (Turborepo)
 ```bash
-# MCP Setup
-npx sanity@latest mcp configure  # Configure MCP for your AI editor
-
-# Schema & Types
-npx sanity schema deploy     # Deploy schema to Content Lake (REQUIRED before MCP!)
-npx sanity schema extract    # Extract schema for TypeGen
-npx sanity typegen generate  # Generate TypeScript types
-
-# Development
-npx sanity dev               # Start Studio dev server
-npx sanity build             # Build Studio for production
-npx sanity deploy            # Deploy Studio to Sanity hosting
-
-# Help
-npx sanity docs search "query"  # Search Sanity documentation
-npx sanity --help               # List all CLI commands
+npm run dev              # Start all apps in development
+npm run build            # Build all apps and packages
+npm run lint             # Lint all apps
+npm run format           # Format code with Prettier
+npm run check-types      # Type check all apps
+npm run deploy:studio    # Deploy Sanity Studio
+npm run deploy:functions # Deploy Sanity blueprints/functions
 ```
 
-## Knowledge Router
-
-If the Sanity MCP server (`https://mcp.sanity.io`) is available, use `list_sanity_rules` and `get_sanity_rules` to load always up-to-date rules on demand. Otherwise, use the table below to find local rule files.
-
-| Topic | Trigger Keywords | Rule File |
-| :--- | :--- | :--- |
-| **Project Structure** | `structure`, `monorepo`, `embedded studio`, `file naming` | `rules/sanity-project-structure.mdc` |
-| **Onboarding** | `start`, `setup`, `init`, `new project` | `rules/sanity-get-started.mdc` |
-| **Schema** | `schema`, `model`, `document`, `field`, `defineType` | `rules/sanity-schema.mdc` |
-| **Deprecation** | `deprecate`, `remove field`, `legacy`, `migration` | `rules/sanity-schema.mdc` |
-| **Import/Migration** | `import`, `wordpress`, `html`, `markdown`, `migrate` | `rules/sanity-migration.mdc` |
-| **Next.js** | `next.js`, `app router`, `server component`, `fetch` | `rules/sanity-nextjs.mdc` |
-| **Nuxt** | `nuxt`, `vue`, `nuxt.js` | `rules/sanity-nuxt.mdc` |
-| **Astro** | `astro`, `islands` | `rules/sanity-astro.mdc` |
-| **Remix/React Router** | `remix`, `react router`, `loader` | `rules/sanity-remix.mdc` |
-| **Svelte** | `svelte`, `sveltekit`, `kit` | `rules/sanity-svelte.mdc` |
-| **Visual Editing** | `stega`, `visual editing`, `clean`, `overlay`, `presentation`, `usePresentationQuery` | `rules/sanity-visual-editing.mdc` |
-| **Page Builder** | `page builder`, `pageBuilder`, `block component`, `alignment`, `switch render` | `rules/sanity-page-builder.mdc` |
-| **Rich Text** | `portable text`, `rich text`, `block content`, `serializer`, `PTE`, `marks`, `annotations` | `rules/sanity-portable-text.mdc` |
-| **Images** | `image`, `urlFor`, `crop`, `hotspot`, `lqip` | `rules/sanity-image.mdc` |
-| **Studio Structure** | `structure`, `desk`, `sidebar`, `singleton`, `grouping` | `rules/sanity-studio-structure.mdc` |
-| **Localization** | `i18n`, `translation`, `localization`, `language`, `multilingual`, `localized singleton` | `rules/sanity-localization.mdc` |
-| **SEO** | `seo`, `metadata`, `sitemap`, `og image`, `open graph`, `json-ld`, `redirect` | `rules/sanity-seo.mdc` |
-| **Shopify/Hydrogen** | `shopify`, `hydrogen`, `e-commerce`, `storefront`, `sanity connect` | `rules/sanity-hydrogen.mdc` |
-| **GROQ** | `groq`, `query`, `defineQuery`, `projection`, `filter`, `order` | `rules/sanity-groq.mdc` |
-| **TypeGen** | `typegen`, `typescript`, `types`, `infer`, `satisfies`, `type generation` | `rules/sanity-typegen.mdc` |
-| **App SDK** | `app sdk`, `custom app`, `useDocuments`, `useDocument`, `DocumentHandle`, `SanityApp`, `sdk-react` | `rules/sanity-app-sdk.mdc` |
-
-### Using the Knowledge Router
-
-**Before modifying any code:**
-1. Identify which topics from the table above apply to your task
-2. Read the corresponding rule file(s) using the file path
-3. Follow the patterns and constraints defined in those rules
-
-Example: If asked to "create a blog post schema", read `rules/sanity-schema.mdc` first.
-
-## Agent Behavior
-
-- Specialize in **Structured Content**, **GROQ**, and **Sanity Studio** configuration.
-- Write best-practice, type-safe code using **Sanity TypeGen**.
-- Build scalable content platforms, not just websites.
-- **Detect the user's framework** from `package.json` and consult the appropriate rule file.
-
-## MCP Server (Preferred for Content Operations)
-
-**ALWAYS** use MCP tools instead of writing scripts:
-
-| Tool | Use For |
-|------|---------|
-| `query_documents` | Run GROQ queries |
-| `create_document_from_markdown` | Create content from markdown |
-| `patch_document` | Modify existing documents |
-| `deploy_schema` | Deploy schema to Content Lake |
-| `get_schema` | Inspect deployed schema |
-| `transform_image` | Edit images with AI |
-
-**Critical:** After schema changes, deploy with `deploy_schema` before using content tools.
-
-## Boundaries
-- **Always:**
-  - Use `defineQuery` for all GROQ queries.
-  - Use MCP tools for content operations (query, create, update, patch).
-  - Run `deploy_schema` after schema changes — required before using content tools. If a local Studio exists, update schema files first to keep them in sync with the deployed schema.
-  - Follow the "Deprecation Pattern" when removing fields (ReadOnly -> Hidden -> Deprecated).
-  - Run `npm run typegen` after schema or query changes.
-- **Ask First:**
-  - Before modifying `sanity.config.ts`.
-  - Before deleting any schema definition file.
-- **Never:**
-  - Hardcode API tokens (use `process.env`).
-  - Use loose types (`any`) for Sanity content.
-  - Generate NDJSON import scripts for simple content tasks (use MCP).
-
-### Studio Organization Best Practices
-
-The Sanity Studio follows a well-organized `src/` folder structure:
-
-```
-apps/studio/src/
-├── schemas/              # All content schemas
-│   ├── index.ts         # Combines all schemas
-│   ├── documents/       # Document types (top-level content)
-│   │   ├── index.ts    # Exports all document types
-│   │   └── page.ts     # Example: Page schema
-│   └── objects/         # Object types (reusable fields)
-│       └── index.ts    # Exports all object types
-└── structure/           # Desk structure customization
-    └── index.ts        # Custom navigation & grouping
-```
-
-**Benefits of this structure:**
-- **Clean imports:** Main config imports from `./src/schemas` and `./src/structure`
-- **Scalability:** Easy to add new schemas without cluttering
-- **Separation:** Clear distinction between documents and objects
-- **Maintainability:** Find files quickly as project grows
-
-**Adding new schemas:**
-1. Create file in appropriate folder (`documents/` or `objects/`)
-2. Import in folder's `index.ts`
-3. Automatically available in Studio
-
----
-
-### 2. Sanity Studio (`apps/studio`)
-
-**Purpose:** Content management interface
-
-**Key Details:**
-- **Sanity Version:** 5.5.0
-- **Project ID:** `fpdnd3pj`
-- **Dataset:** `production`
-- **Port:** 3333 (default)
-- **Plugins:** structureTool, visionTool
-
-**Scripts:**
+### Studio (`apps/studio`)
 ```bash
-pnpm dev         # Start studio dev server
-pnpm build       # Build studio
-pnpm lint        # Run ESLint
-pnpm format      # Format code with Prettier
+cd apps/studio
+npm run dev              # Start Studio dev server (port 3333)
+npm run build            # Build Studio
+npm run deploy           # Deploy Studio to Sanity hosting
+npm run typegen          # Extract schema and generate types
+npm run deploy-graphql   # Deploy GraphQL API
 ```
 
-**File Structure:**
+### Web App (`apps/web`)
+```bash
+cd apps/web
+npm run dev              # Start Next.js dev server with Turbopack
+npm run build            # Build Next.js app with Turbopack
+npm run start            # Start production server
+npm run lint             # Run ESLint
 ```
-apps/studio/
-├── src/
-│   ├── schemas/
-│   │   ├── index.ts           # Main schema exports
-│   │   ├── documents/
-│   │   │   ├── index.ts       # Document type exports
-│   │   │   └── page.ts        # Page schema
-│   │   └── objects/
-│   │       └── index.ts       # Object type exports
-│   └── structure/
-│       └── index.ts           # Custom desk structure
-├── static/                    # Static assets
-├── sanity.config.ts           # Sanity configuration
-├── sanity.cli.ts              # CLI configuration
-├── tsconfig.json              # TypeScript config
-└── eslint.config.mjs          # ESLint config
+
+### Type Generation Workflow
+After schema changes:
+```bash
+cd apps/studio
+npm run typegen          # Extracts schema + generates TypeScript types
 ```
+
+## Architecture
+
+### Monorepo Structure
+```
+apps/
+├── studio/              # Sanity Studio (port 3333)
+│   ├── src/
+│   │   ├── schemaTypes/ # Content schemas
+│   │   │   ├── documents/   # Document types (page, blog, product, etc.)
+│   │   │   ├── definitions/ # Reusable field definitions
+│   │   │   └── blocks/      # Block content types
+│   │   ├── actions/     # Custom document actions (workflow)
+│   │   ├── components/  # Studio UI components
+│   │   └── utils/       # Helper functions
+│   ├── sanity.config.ts # Studio configuration
+│   └── location.ts      # Presentation tool locations
+│
+├── web/                 # Next.js 15 frontend
+│   ├── src/
+│   │   ├── app/         # App Router pages
+│   │   │   ├── api/draft-mode/ # Draft mode endpoints
+│   │   │   └── blog/    # Blog pages
+│   │   ├── components/  # React components
+│   │   ├── lib/sanity/  # Sanity client, queries, types
+│   │   └── middleware.ts # Redirect handling
+│   └── next.config.ts
+│
+functions/               # Sanity blueprints (serverless functions)
+├── auto-increment/      # Auto-increment ID function
+└── test-function/       # Example function
+
+packages/                # Shared packages
+├── ui/                  # Shared UI components
+├── eslint-config/       # ESLint configurations
+└── typescript-config/   # TypeScript configurations
+```
+
+### Schema Organization
+
+The Studio uses a well-organized schema structure:
+
+**`apps/studio/src/schemaTypes/index.ts`** - Combines all schemas:
+- `definitions/` - Reusable field definitions
+- `documents/` - Document types (top-level content)
+- `blocks/` - Block content types
+
+**Key document types:**
+- `blog` - Blog posts with portable text, authors, categories
+- `product` - Products with workflow system
+- `productAutoIncrement` - Products with auto-generated IDs
+- `redirect` - URL redirects (internal/external)
+- `counter` - Simple counter example
+
+### Web App Integration
+
+**Sanity Client:** `apps/web/src/lib/sanity/`
+- `client.ts` - Base Sanity client
+- `live.ts` - Live preview setup
+- `queries.ts` - GROQ queries
+- `sanity.types.ts` - Generated types from Studio schema
+- `image.ts` - Image URL builder
+- `token.ts` - Token management
+
+**Visual Editing:**
+- Draft mode API routes in `app/api/draft-mode/`
+- Presentation tool configured in Studio
+- Real-time content preview integration
+
+**Middleware:**
+- `src/middleware.ts` - Handles redirects from Sanity `redirect` documents
+- Queries Sanity on every request matching config
+- Supports internal (relative) and external (absolute) redirects
+
+### Custom Workflow System
+
+**Location:** `apps/studio/src/actions/workflowAction.ts`
+
+Custom document actions for content approval workflow:
+- `SmartPublishAction` - Replaces default publish, checks workflow state
+- `ApproveAction` - Approve content for publication
+- `RejectAction` - Reject content with reason
+- `ResetToDraftAction` - Reset rejected content to draft
+
+**Enabled for:** `product` document type (configurable in `sanity.config.ts`)
+
+**Workflow states tracked in document metadata:**
+- Submission status
+- Approval/rejection state
+- Reviewer information
+- Timestamps
+
+### Sanity Blueprints (Functions)
+
+**Configuration:** `sanity.blueprint.ts` at root
+
+**Functions:**
+- `auto-increment` - Automatically assigns sequential IDs to `productAutoIncrement` documents on creation
+- Triggered by document events (create, update, delete)
+- Deployed with `npm run deploy:functions`
+
+## Key Technical Details
+
+### Studio Configuration
+
+**Plugins enabled** (`apps/studio/sanity.config.ts`):
+- `structureTool` - Content management interface
+- `visionTool` - GROQ query testing
+- `presentationTool` - Live preview with Next.js integration
+
+**Presentation Tool setup:**
+- Custom location resolver in `location.ts`
+- Preview URL points to web app
+- Draft mode integration for real-time editing
+
+**Custom document actions:**
+- Configured per document type in config
+- Replaces/augments default Studio actions
+- Currently applies workflow to `product` type
+
+### Next.js 15 Features
+
+**App Router structure:**
+- Server components by default
+- Draft mode for previews
+- API routes for draft mode toggle
+- Middleware for redirects
+
+**Turbopack:** Enabled for both dev and build
+- Faster builds and HMR
+- Configured in package.json scripts
+
+**Dependencies:**
+- `next-sanity` - Sanity client for Next.js
+- `@sanity/visual-editing` - Visual editing overlay
+- `@portabletext/react` - Render portable text
+- `@sanity/image-url` - Image URL builder
+
+## Development Guidelines
+
+### Schema Development
+
+1. **Location:** Add new schemas to appropriate folder:
+   - `documents/` for top-level content types
+   - `definitions/` for reusable field definitions
+   - `blocks/` for block content types
+
+2. **Best practices** (from `.cursor/rules`):
+   - Use `defineType`, `defineField`, `defineArrayMember`
+   - One type per file with named export
+   - Include `icon` and `preview` configuration
+   - Use groups/fieldsets for complex schemas
+   - Add validation with helpful messages
+
+3. **After changes:**
+   ```bash
+   cd apps/studio
+   npm run typegen  # Updates types for web app
+   ```
+
+### GROQ Query Standards
+
+- Use `SCREAMING_SNAKE_CASE` for query variables
+- Always use proper projections (no `{ ... }` without fields)
+- Pass parameters for dynamic values
+- Generate types with `defineQuery` wrapper
+
+### Adding Document Actions
+
+To add workflow to new document type:
+
+1. Add type name to `workflowEnabledTypes` array in `sanity.config.ts`
+2. Actions automatically replace default publish button
+3. Document metadata tracks workflow state
+
+### Blueprints/Functions
+
+1. Define in `sanity.blueprint.ts`
+2. Implement in `functions/[name]/index.ts`
+3. Deploy with `npm run deploy:functions`
+4. Test using Studio or API
+
+## Important Notes
+
+- **Monorepo:** This is a Turborepo. Run commands from root or app directory as needed.
+- **Git branch:** Currently on `feat/sanity-next` testing Sanity's next version
+- **Type safety:** Web app uses generated types from Studio schema
+- **Preview mode:** Uses Next.js draft mode, toggled via API routes
+- **Redirects:** Managed in Sanity, executed by Next.js middleware
+- **Workflow:** Custom approval system for content, currently on `product` type only
