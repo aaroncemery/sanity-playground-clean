@@ -73,14 +73,6 @@ export function HeroBlock({ data }: HeroBlockProps) {
         ? "gradient"
         : "default";
 
-  // Debug: Log the media object structure
-  if (media) {
-    console.log("Hero media object:", JSON.stringify(media, null, 2));
-    console.log("Has asset?", !!media.asset);
-    console.log("Has asset._ref?", media.asset?._ref);
-    console.log("Has asset.metadata?", !!media.asset?.metadata);
-  }
-
   // Check if image is valid - either has _ref OR has metadata (Media Library format)
   const hasValidImage =
     media && media.asset && (media.asset._ref || media.asset.metadata);

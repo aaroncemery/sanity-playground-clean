@@ -88,6 +88,7 @@ export default defineConfig({
           enable: '/api/draft-mode/enable',
         },
       },
+      draftModeSecret: 'my-secret-preview-token-12345',
     }),
   ],
 

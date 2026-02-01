@@ -29,6 +29,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const isDraftMode = (await draftMode()).isEnabled;
+
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="antialiased">
@@ -44,7 +46,7 @@ export default async function RootLayout({
         </main>
         <Footer />
         <SanityLive />
-        {(await draftMode()).isEnabled && <VisualEditing />}
+        {isDraftMode && <VisualEditing />}
       </body>
     </html>
   );

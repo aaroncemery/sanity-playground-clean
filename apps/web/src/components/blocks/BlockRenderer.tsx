@@ -36,7 +36,6 @@ export function BlockRenderer({ block }: BlockRendererProps) {
     case "testimonials":
       return <TestimonialsBlock data={data} />;
     default:
-      console.warn(`Unknown block type: ${_type}`);
       return null;
   }
 }

@@ -15,12 +15,12 @@ export function Section({
     <section
       className={clsx(
         "py-16 md:py-24 lg:py-32",
-        variant === "default" && "bg-background",
-        variant === "muted" && "bg-surface",
+        variant === "default" && "bg-white dark:bg-neutral-950",
+        variant === "muted" && "bg-neutral-50 dark:bg-neutral-900",
         variant === "dark" && "bg-neutral-900 dark:bg-neutral-950 text-white",
         variant === "gradient" &&
-          "bg-gradient-to-b from-background via-surface to-background",
-        className
+          "bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white",
+        className,
       )}
     >
       {children}

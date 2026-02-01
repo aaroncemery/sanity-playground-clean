@@ -44,7 +44,7 @@ export function StatsSectionBlock({ data }: StatsSectionBlockProps) {
               <FadeIn key={index} delay={index * 100}>
                 <div className="group text-center p-6 rounded-2xl border border-transparent hover:border-accent/20 hover:bg-white dark:hover:bg-neutral-900 transition-all duration-300 hover:shadow-lg">
                   {stat.value && (
-                    <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-accent mb-2 transition-transform duration-300 group-hover:scale-110">
+                    <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-accent mb-2 transition-transform duration-300 group-hover:scale-110 whitespace-nowrap">
                       {stat.value}
                     </div>
                   )}

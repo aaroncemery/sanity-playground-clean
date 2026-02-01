@@ -119,8 +119,26 @@ export const HOME = defineQuery(`
       _type == "hero" => {
         headline,
         subtext,
-        primaryCta,
-        secondaryCta,
+        primaryCta {
+          text,
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
+        },
+        secondaryCta {
+          text,
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
+        },
         media {
           ...,
           asset->
@@ -142,18 +160,8 @@ export const HOME = defineQuery(`
         heading,
         content,
         media {
-          asset->{
-            _ref,
-            metadata {
-              dimensions,
-              lqip,
-              blurHash,
-              palette
-            }
-          },
-          hotspot,
-          crop,
-          alt
+          ...,
+          asset->
         },
         mediaPosition,
         reverse
@@ -163,11 +171,23 @@ export const HOME = defineQuery(`
         description,
         primaryButton {
           text,
-          link
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
         },
         secondaryButton {
           text,
-          link
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
         },
         backgroundVariant
       },
@@ -195,15 +215,8 @@ export const HOME = defineQuery(`
           role,
           company,
           avatar {
-            asset->{
-              _ref,
-              metadata {
-                dimensions
-              }
-            },
-            hotspot,
-            crop,
-            alt
+            ...,
+            asset->
           }
         }
       }
@@ -256,25 +269,27 @@ export const PAGE_BY_SLUG = defineQuery(`
         subtext,
         primaryCta {
           text,
-          link
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
         },
         secondaryCta {
           text,
-          link
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
         },
         media {
-          asset->{
-            _ref,
-            metadata {
-              dimensions,
-              lqip,
-              blurHash,
-              palette
-            }
-          },
-          hotspot,
-          crop,
-          alt
+          ...,
+          asset->
         },
         variant,
         backgroundVariant
@@ -293,18 +308,8 @@ export const PAGE_BY_SLUG = defineQuery(`
         heading,
         content,
         media {
-          asset->{
-            _ref,
-            metadata {
-              dimensions,
-              lqip,
-              blurHash,
-              palette
-            }
-          },
-          hotspot,
-          crop,
-          alt
+          ...,
+          asset->
         },
         mediaPosition,
         reverse
@@ -314,11 +319,23 @@ export const PAGE_BY_SLUG = defineQuery(`
         description,
         primaryButton {
           text,
-          link
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
         },
         secondaryButton {
           text,
-          link
+          linkType,
+          internalLink->{
+            _type,
+            "slug": slug.current
+          },
+          externalUrl,
+          openInNewTab
         },
         backgroundVariant
       },
@@ -346,15 +363,8 @@ export const PAGE_BY_SLUG = defineQuery(`
           role,
           company,
           avatar {
-            asset->{
-              _ref,
-              metadata {
-                dimensions
-              }
-            },
-            hotspot,
-            crop,
-            alt
+            ...,
+            asset->
           }
         }
       }

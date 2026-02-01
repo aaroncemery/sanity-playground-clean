@@ -25,7 +25,6 @@ async function getBlogPost(slug: string): Promise<BLOG_POST_RESULT> {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching blog post:", error);
     return null;
   }
 }
