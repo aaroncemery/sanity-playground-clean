@@ -9,7 +9,8 @@
     "deploy:studio": "cd apps/studio && sanity deploy",
     "deploy:functions": "npx sanity blueprints deploy",
     "check-types": "turbo run check-types",
-    "studio:typegen": "cd apps/studio && npm run typegen"
+    "studio:typegen": "cd apps/studio && npm run typegen",
+    "marketing:create-aspect": "cd apps/studio && sanity media create-aspect"
   },
   "devDependencies": {
     "@sanity/blueprints": "^0.2.0",

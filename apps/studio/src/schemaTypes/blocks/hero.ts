@@ -45,6 +45,14 @@ export const hero = defineType({
       description: 'Optional hero image or graphic',
       options: {
         hotspot: true,
+        mediaLibrary: {
+          filters: [
+            {
+              name: 'Hero images',
+              query: 'defined(aspects.assetUse) && aspects.assetUse == "hero"',
+            },
+          ],
+        },
       },
       fields: [
         defineField({
