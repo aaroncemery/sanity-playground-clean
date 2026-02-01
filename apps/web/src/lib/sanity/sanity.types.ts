@@ -13,6 +13,22 @@
  */
 
 // Source: schema.json
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type Avatar = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "avatar.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  _type: "image";
+};
+
 export type LeftRightContent = {
   _type: "leftRightContent";
   title?: string;
@@ -55,9 +71,230 @@ export type LeftRightContent = {
   }>;
 };
 
+export type Testimonials = {
+  _type: "testimonials";
+  title?: string;
+  testimonials: Array<{
+    quote: string;
+    author: string;
+    role?: string;
+    company?: string;
+    avatar?: Avatar;
+    _key: string;
+  }>;
+};
+
+export type StatsSection = {
+  _type: "statsSection";
+  title?: string;
+  layout?: "2-column" | "3-column" | "4-column";
+  stats: Array<{
+    value: string;
+    label: string;
+    description?: string;
+    _key: string;
+  }>;
+};
+
+export type FaqSection = {
+  _type: "faqSection";
+  title?: string;
+  faqs: Array<{
+    question: string;
+    answer: RichText;
+    _key: string;
+  }>;
+};
+
+export type CtaSection = {
+  _type: "ctaSection";
+  heading: string;
+  description?: string;
+  primaryButton: Link;
+  secondaryButton?: Link;
+  backgroundVariant?: "neutral" | "accent" | "gradient";
+};
+
+export type TextMedia = {
+  _type: "textMedia";
+  heading: string;
+  content: RichText;
+  media: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  mediaPosition?: "left" | "right";
+  reverse?: boolean;
+};
+
+export type Features = {
+  _type: "features";
+  title?: string;
+  description?: string;
+  layout?: "2-column" | "3-column";
+  features: Array<{
+    icon?: string;
+    title: string;
+    description: string;
+    _key: string;
+  }>;
+};
+
 export type Hero = {
   _type: "hero";
-  title?: string;
+  headline: string;
+  subtext?: string;
+  primaryCta?: Link;
+  secondaryCta?: Link;
+  media?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  variant?: "centered" | "left-aligned";
+  backgroundVariant?: "light" | "dark" | "gradient";
+};
+
+export type Footer = {
+  _id: string;
+  _type: "footer";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  branding?: {
+    companyName: string;
+    tagline?: string;
+    logo?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      _type: "image";
+    };
+  };
+  sections?: Array<{
+    heading: string;
+    links?: Array<
+      {
+        _key: string;
+      } & Link
+    >;
+    _type: "footerSection";
+    _key: string;
+  }>;
+  socialLinks?: Array<{
+    platform:
+      | "twitter"
+      | "github"
+      | "linkedin"
+      | "youtube"
+      | "discord"
+      | "slack"
+      | "facebook"
+      | "instagram";
+    url: string;
+    ariaLabel?: string;
+    _type: "socialLink";
+    _key: string;
+  }>;
+  copyrightText?: string;
+  legalLinks?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
+export type Navigation = {
+  _id: string;
+  _type: "navigation";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  logo?: {
+    text?: string;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      _type: "image";
+    };
+  };
+  navItems?: Array<
+    | {
+        link?: Link;
+        _type: "navLink";
+        _key: string;
+      }
+    | {
+        title: string;
+        columns?: Array<{
+          heading?: string;
+          links?: Array<
+            {
+              _key: string;
+            } & Link
+          >;
+          _type: "column";
+          _key: string;
+        }>;
+        _type: "megaNav";
+        _key: string;
+      }
+  >;
+  ctaButton?: Link;
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "page";
+};
+
+export type HomeReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "home";
+};
+
+export type Link = {
+  _type: "link";
+  text: string;
+  linkType: "internal" | "external";
+  internalLink?: PageReference | HomeReference;
+  externalUrl?: string;
+  openInNewTab?: boolean;
+  ariaLabel?: string;
 };
 
 export type Redirect = {
@@ -70,13 +307,6 @@ export type Redirect = {
   to: string;
   type: "internal" | "external";
   permanent?: boolean;
-};
-
-export type SanityImageAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
 export type ProductAutoIncrement = {
@@ -118,22 +348,6 @@ export type WorkflowMetadata = {
   approvedAt?: string;
   approvedBy?: string;
   rejectionReason?: string;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
 };
 
 export type Slug = {
@@ -198,6 +412,121 @@ export type Seo = {
   noIndex?: boolean;
   hideFromLists?: boolean;
 };
+
+export type Home = {
+  _id: string;
+  _type: "home";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & Features)
+    | ({
+        _key: string;
+      } & TextMedia)
+    | ({
+        _key: string;
+      } & CtaSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & StatsSection)
+    | ({
+        _key: string;
+      } & Testimonials)
+  >;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+};
+
+export type Page = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & Features)
+    | ({
+        _key: string;
+      } & TextMedia)
+    | ({
+        _key: string;
+      } & CtaSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & StatsSection)
+    | ({
+        _key: string;
+      } & Testimonials)
+  >;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+};
+
+export type BlogReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "blog";
+};
+
+export type RichText = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+      listItem?: "number" | "bullet";
+      markDefs?: Array<
+        | {
+            href: string;
+            openInNewTab?: boolean;
+            _type: "link";
+            _key: string;
+          }
+        | {
+            reference: BlogReference;
+            _type: "internalLink";
+            _key: string;
+          }
+      >;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      _type: "image";
+      _key: string;
+    }
+>;
 
 export type NestedModalTestRichText = Array<
   | {
@@ -322,52 +651,6 @@ export type WorkflowStatus =
   | "published"
   | "rejected";
 
-export type BlogReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "blog";
-};
-
-export type RichText = Array<
-  | {
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-      listItem?: "number" | "bullet";
-      markDefs?: Array<
-        | {
-            href: string;
-            openInNewTab?: boolean;
-            _type: "link";
-            _key: string;
-          }
-        | {
-            reference: BlogReference;
-            _type: "internalLink";
-            _key: string;
-          }
-      >;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }
-  | {
-      asset?: SanityImageAssetReference;
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt: string;
-      caption?: string;
-      _type: "image";
-      _key: string;
-    }
->;
-
 export type Blog = {
   _id: string;
   _type: "blog";
@@ -389,6 +672,50 @@ export type Blog = {
   nestedModalTestRichText?: NestedModalTestRichText;
   seo?: Seo;
   openGraph?: OpenGraph;
+};
+
+export type SanityVideoMetadataPlayback = {
+  _type: "sanity.videoMetadata.playback";
+  policy?: string;
+};
+
+export type SanityVideoMetadata = {
+  _type: "sanity.videoMetadata";
+  duration?: number;
+  framerate?: number;
+  aspectRatio?: number;
+  hasAudio?: boolean;
+  codec?: string;
+  bitrate?: number;
+};
+
+export type SanityVideoAsset = {
+  _id: string;
+  _type: "sanity.videoAsset";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  originalFilename?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  altText?: string;
+  creditLine?: string;
+  metadata?: SanityVideoMetadata;
+  sha1hash?: string;
+  extension?: string;
+  mimeType?: string;
+  size?: number;
+  assetId?: string;
+  uploadId?: string;
+  path?: string;
+  url?: string;
+};
+
+export type SanityVideo = {
+  _type: "sanity.video";
+  asset?: unknown;
+  media?: unknown;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -489,27 +816,45 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
-  | LeftRightContent
-  | Hero
-  | Redirect
   | SanityImageAssetReference
-  | ProductAutoIncrement
-  | WorkflowMetadata
+  | Avatar
+  | LeftRightContent
+  | Testimonials
+  | StatsSection
+  | FaqSection
+  | CtaSection
+  | TextMedia
+  | Features
+  | Hero
+  | Footer
   | SanityImageCrop
   | SanityImageHotspot
+  | Navigation
+  | PageReference
+  | HomeReference
+  | Link
+  | Redirect
+  | ProductAutoIncrement
+  | WorkflowMetadata
   | Slug
   | Counter
   | Product
   | OpenGraph
   | Seo
+  | Home
+  | Page
+  | BlogReference
+  | RichText
   | NestedModalTestRichText
   | NestedModalLevel3
   | NestedModalLevel2
   | NestedModalLevel1
   | WorkflowStatus
-  | BlogReference
-  | RichText
   | Blog
+  | SanityVideoMetadataPlayback
+  | SanityVideoMetadata
+  | SanityVideoAsset
+  | SanityVideo
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -625,6 +970,519 @@ export type REDIRECT_BY_PATH_RESULT = {
   permanent: boolean | null;
 } | null;
 
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: HOME
+// Query: *[_type == "home" && _id == "home"][0]{    _id,    _type,    title,    pageSections[] {      _type,      _key,      _type == "hero" => {        headline,        subtext,        primaryCta {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        secondaryCta {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        media {          ...,          asset->        },        variant,        backgroundVariant      },      _type == "features" => {        title,        description,        layout,        features[] {          icon,          title,          description        }      },      _type == "textMedia" => {        heading,        content,        media {          ...,          asset->        },        mediaPosition,        reverse      },      _type == "ctaSection" => {        heading,        description,        primaryButton {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        secondaryButton {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        backgroundVariant      },      _type == "faqSection" => {        title,        faqs[] {          question,          answer        }      },      _type == "statsSection" => {        title,        layout,        stats[] {          value,          label,          description        }      },      _type == "testimonials" => {        title,        testimonials[] {          quote,          author,          role,          company,          avatar {            ...,            asset->          }        }      }    },    seo {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      },      noIndex,      hideFromLists    },    openGraph {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      }    }  }
+export type HOME_RESULT = {
+  _id: "home";
+  _type: "home";
+  title: string;
+  pageSections: Array<
+    | {
+        _type: "ctaSection";
+        _key: string;
+        heading: string;
+        description: string | null;
+        primaryButton: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        };
+        secondaryButton: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        backgroundVariant: "accent" | "gradient" | "neutral" | null;
+      }
+    | {
+        _type: "faqSection";
+        _key: string;
+        title: string | null;
+        faqs: Array<{
+          question: string;
+          answer: RichText;
+        }>;
+      }
+    | {
+        _type: "features";
+        _key: string;
+        title: string | null;
+        description: string | null;
+        layout: "2-column" | "3-column" | null;
+        features: Array<{
+          icon: string | null;
+          title: string;
+          description: string;
+        }>;
+      }
+    | {
+        _type: "hero";
+        _key: string;
+        headline: string;
+        subtext: string | null;
+        primaryCta: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        secondaryCta: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        media: {
+          asset: {
+            _id: string;
+            _type: "sanity.imageAsset";
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash?: string;
+            extension?: string;
+            mimeType?: string;
+            size?: number;
+            assetId?: string;
+            uploadId?: string;
+            path?: string;
+            url?: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        variant: "centered" | "left-aligned" | null;
+        backgroundVariant: "dark" | "gradient" | "light" | null;
+      }
+    | {
+        _type: "statsSection";
+        _key: string;
+        title: string | null;
+        layout: "2-column" | "3-column" | "4-column" | null;
+        stats: Array<{
+          value: string;
+          label: string;
+          description: string | null;
+        }>;
+      }
+    | {
+        _type: "testimonials";
+        _key: string;
+        title: string | null;
+        testimonials: Array<{
+          quote: string;
+          author: string;
+          role: string | null;
+          company: string | null;
+          avatar: {
+            asset: {
+              _id: string;
+              _type: "sanity.imageAsset";
+              _createdAt: string;
+              _updatedAt: string;
+              _rev: string;
+              originalFilename?: string;
+              label?: string;
+              title?: string;
+              description?: string;
+              altText?: string;
+              sha1hash?: string;
+              extension?: string;
+              mimeType?: string;
+              size?: number;
+              assetId?: string;
+              uploadId?: string;
+              path?: string;
+              url?: string;
+              metadata?: SanityImageMetadata;
+              source?: SanityAssetSourceData;
+            } | null;
+            media?: unknown; // Unable to locate the referenced type "avatar.media" in schema
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _type: "textMedia";
+        _key: string;
+        heading: string;
+        content: RichText;
+        media: {
+          asset: {
+            _id: string;
+            _type: "sanity.imageAsset";
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash?: string;
+            extension?: string;
+            mimeType?: string;
+            size?: number;
+            assetId?: string;
+            uploadId?: string;
+            path?: string;
+            url?: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        };
+        mediaPosition: "left" | "right" | null;
+        reverse: boolean | null;
+      }
+  > | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+    noIndex: boolean | null;
+    hideFromLists: boolean | null;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+} | null;
+
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: PAGE_BY_SLUG
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    _type,    title,    "slug": slug.current,    pageSections[] {      _type,      _key,      _type == "hero" => {        headline,        subtext,        primaryCta {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        secondaryCta {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        media {          ...,          asset->        },        variant,        backgroundVariant      },      _type == "features" => {        title,        description,        layout,        features[] {          icon,          title,          description        }      },      _type == "textMedia" => {        heading,        content,        media {          ...,          asset->        },        mediaPosition,        reverse      },      _type == "ctaSection" => {        heading,        description,        primaryButton {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        secondaryButton {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        backgroundVariant      },      _type == "faqSection" => {        title,        faqs[] {          question,          answer        }      },      _type == "statsSection" => {        title,        layout,        stats[] {          value,          label,          description        }      },      _type == "testimonials" => {        title,        testimonials[] {          quote,          author,          role,          company,          avatar {            ...,            asset->          }        }      }    },    seo {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      },      noIndex,      hideFromLists    },    openGraph {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      }    }  }
+export type PAGE_BY_SLUG_RESULT = {
+  _id: string;
+  _type: "page";
+  title: string;
+  slug: string;
+  pageSections: Array<
+    | {
+        _type: "ctaSection";
+        _key: string;
+        heading: string;
+        description: string | null;
+        primaryButton: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        };
+        secondaryButton: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        backgroundVariant: "accent" | "gradient" | "neutral" | null;
+      }
+    | {
+        _type: "faqSection";
+        _key: string;
+        title: string | null;
+        faqs: Array<{
+          question: string;
+          answer: RichText;
+        }>;
+      }
+    | {
+        _type: "features";
+        _key: string;
+        title: string | null;
+        description: string | null;
+        layout: "2-column" | "3-column" | null;
+        features: Array<{
+          icon: string | null;
+          title: string;
+          description: string;
+        }>;
+      }
+    | {
+        _type: "hero";
+        _key: string;
+        headline: string;
+        subtext: string | null;
+        primaryCta: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        secondaryCta: {
+          text: string;
+          linkType: "external" | "internal";
+          internalLink:
+            | {
+                _type: "home";
+                slug: null;
+              }
+            | {
+                _type: "page";
+                slug: string;
+              }
+            | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        media: {
+          asset: {
+            _id: string;
+            _type: "sanity.imageAsset";
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash?: string;
+            extension?: string;
+            mimeType?: string;
+            size?: number;
+            assetId?: string;
+            uploadId?: string;
+            path?: string;
+            url?: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        } | null;
+        variant: "centered" | "left-aligned" | null;
+        backgroundVariant: "dark" | "gradient" | "light" | null;
+      }
+    | {
+        _type: "statsSection";
+        _key: string;
+        title: string | null;
+        layout: "2-column" | "3-column" | "4-column" | null;
+        stats: Array<{
+          value: string;
+          label: string;
+          description: string | null;
+        }>;
+      }
+    | {
+        _type: "testimonials";
+        _key: string;
+        title: string | null;
+        testimonials: Array<{
+          quote: string;
+          author: string;
+          role: string | null;
+          company: string | null;
+          avatar: {
+            asset: {
+              _id: string;
+              _type: "sanity.imageAsset";
+              _createdAt: string;
+              _updatedAt: string;
+              _rev: string;
+              originalFilename?: string;
+              label?: string;
+              title?: string;
+              description?: string;
+              altText?: string;
+              sha1hash?: string;
+              extension?: string;
+              mimeType?: string;
+              size?: number;
+              assetId?: string;
+              uploadId?: string;
+              path?: string;
+              url?: string;
+              metadata?: SanityImageMetadata;
+              source?: SanityAssetSourceData;
+            } | null;
+            media?: unknown; // Unable to locate the referenced type "avatar.media" in schema
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            alt?: string;
+            _type: "image";
+          } | null;
+        }>;
+      }
+    | {
+        _type: "textMedia";
+        _key: string;
+        heading: string;
+        content: RichText;
+        media: {
+          asset: {
+            _id: string;
+            _type: "sanity.imageAsset";
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash?: string;
+            extension?: string;
+            mimeType?: string;
+            size?: number;
+            assetId?: string;
+            uploadId?: string;
+            path?: string;
+            url?: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          _type: "image";
+        };
+        mediaPosition: "left" | "right" | null;
+        reverse: boolean | null;
+      }
+  > | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+    noIndex: boolean | null;
+    hideFromLists: boolean | null;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -632,5 +1490,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "blog" && !seo.noIndex] | order(publishedAt desc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    description,\n    "slug": slug.current,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash,\n          palette\n        }\n      },\n      hotspot,\n      crop,\n      alt\n    },\n    publishedAt,\n    "seoNoIndex": seo.noIndex,\n    "seoHideFromLists": seo.hideFromLists\n  }\n': BLOG_POSTS_RESULT;
     '\n  *[_type == "blog" && slug.current == $slug][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    description,\n    "slug": slug.current,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash,\n          palette\n        }\n      },\n      hotspot,\n      crop,\n      alt\n    },\n    publishedAt,\n    content,\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': BLOG_POST_RESULT;
     '\n  *[_type == "redirect" && from == $pathname][0]{\n    _id,\n    from,\n    to,\n    type,\n    permanent\n  }\n': REDIRECT_BY_PATH_RESULT;
+    '\n  *[_type == "home" && _id == "home"][0]{\n    _id,\n    _type,\n    title,\n    pageSections[] {\n      _type,\n      _key,\n      _type == "hero" => {\n        headline,\n        subtext,\n        primaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        media {\n          ...,\n          asset->\n        },\n        variant,\n        backgroundVariant\n      },\n      _type == "features" => {\n        title,\n        description,\n        layout,\n        features[] {\n          icon,\n          title,\n          description\n        }\n      },\n      _type == "textMedia" => {\n        heading,\n        content,\n        media {\n          ...,\n          asset->\n        },\n        mediaPosition,\n        reverse\n      },\n      _type == "ctaSection" => {\n        heading,\n        description,\n        primaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        backgroundVariant\n      },\n      _type == "faqSection" => {\n        title,\n        faqs[] {\n          question,\n          answer\n        }\n      },\n      _type == "statsSection" => {\n        title,\n        layout,\n        stats[] {\n          value,\n          label,\n          description\n        }\n      },\n      _type == "testimonials" => {\n        title,\n        testimonials[] {\n          quote,\n          author,\n          role,\n          company,\n          avatar {\n            ...,\n            asset->\n          }\n        }\n      }\n    },\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': HOME_RESULT;
+    '\n  *[_type == "page" && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    pageSections[] {\n      _type,\n      _key,\n      _type == "hero" => {\n        headline,\n        subtext,\n        primaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        media {\n          ...,\n          asset->\n        },\n        variant,\n        backgroundVariant\n      },\n      _type == "features" => {\n        title,\n        description,\n        layout,\n        features[] {\n          icon,\n          title,\n          description\n        }\n      },\n      _type == "textMedia" => {\n        heading,\n        content,\n        media {\n          ...,\n          asset->\n        },\n        mediaPosition,\n        reverse\n      },\n      _type == "ctaSection" => {\n        heading,\n        description,\n        primaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        backgroundVariant\n      },\n      _type == "faqSection" => {\n        title,\n        faqs[] {\n          question,\n          answer\n        }\n      },\n      _type == "statsSection" => {\n        title,\n        layout,\n        stats[] {\n          value,\n          label,\n          description\n        }\n      },\n      _type == "testimonials" => {\n        title,\n        testimonials[] {\n          quote,\n          author,\n          role,\n          company,\n          avatar {\n            ...,\n            asset->\n          }\n        }\n      }\n    },\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': PAGE_BY_SLUG_RESULT;
   }
 }
