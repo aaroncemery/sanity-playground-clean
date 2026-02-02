@@ -1,6 +1,6 @@
-import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
+import {orderRankOrdering} from '@sanity/orderable-document-list'
 import {FileTextIcon} from 'lucide-react'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 import {GROUP, GROUPS} from '../../utils/constant'
 import {isUnique} from '../../utils/slug'

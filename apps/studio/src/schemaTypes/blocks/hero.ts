@@ -45,6 +45,7 @@ export const hero = defineType({
       description: 'Optional hero image or graphic',
       options: {
         hotspot: true,
+        // MEDIA LIBRARY FILTERS
         mediaLibrary: {
           filters: [
             {
