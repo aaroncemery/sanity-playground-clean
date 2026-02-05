@@ -6,11 +6,11 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "deploy:studio": "cd apps/studio && sanity deploy",
-    "deploy:functions": "npx sanity blueprints deploy",
+    "deploy:studio": "cd apps/marketing/studio && sanity deploy",
+    "deploy:functions": "pnpm dlx sanity blueprints deploy",
     "check-types": "turbo run check-types",
-    "studio:typegen": "cd apps/studio && npm run typegen",
-    "marketing:create-aspect": "cd apps/studio && sanity media create-aspect"
+    "studio:typegen": "cd apps/marketing/studio && pnpm run typegen",
+    "marketing:create-aspect": "cd apps/marketing/studio && sanity media create-aspect"
   },
   "devDependencies": {
     "@sanity/blueprints": "^0.2.0",
@@ -22,9 +22,5 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "npm@10.9.2",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "packageManager": "pnpm@9.15.4"
 }

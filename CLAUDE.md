@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a **Turbo monorepo** combining a Sanity Studio with a Next.js web application. The project demonstrates Sanity's Visual Editing, custom workflows, serverless functions (blueprints), and redirect management.
 
+**Package Manager:** pnpm (workspace protocol for monorepo dependencies)
+
 **Sanity Project:**
 - Project ID: `a09jbdjz`
 - Dataset: `production`
@@ -15,39 +17,39 @@ This is a **Turbo monorepo** combining a Sanity Studio with a Next.js web applic
 
 ### Root Level (Turborepo)
 ```bash
-npm run dev              # Start all apps in development
-npm run build            # Build all apps and packages
-npm run lint             # Lint all apps
-npm run format           # Format code with Prettier
-npm run check-types      # Type check all apps
-npm run deploy:studio    # Deploy Sanity Studio
-npm run deploy:functions # Deploy Sanity blueprints/functions
+pnpm dev                 # Start all apps in development
+pnpm build               # Build all apps and packages
+pnpm lint                # Lint all apps
+pnpm format              # Format code with Prettier
+pnpm check-types         # Type check all apps
+pnpm deploy:studio       # Deploy Sanity Studio
+pnpm deploy:functions    # Deploy Sanity blueprints/functions
 ```
 
-### Studio (`apps/studio`)
+### Studio (`apps/marketing/studio`)
 ```bash
-cd apps/studio
-npm run dev              # Start Studio dev server (port 3333)
-npm run build            # Build Studio
-npm run deploy           # Deploy Studio to Sanity hosting
-npm run typegen          # Extract schema and generate types
-npm run deploy-graphql   # Deploy GraphQL API
+cd apps/marketing/studio
+pnpm dev                 # Start Studio dev server (port 3333)
+pnpm build               # Build Studio
+pnpm deploy              # Deploy Studio to Sanity hosting
+pnpm typegen             # Extract schema and generate types
+pnpm deploy-graphql      # Deploy GraphQL API
 ```
 
-### Web App (`apps/web`)
+### Web App (`apps/marketing/web`)
 ```bash
-cd apps/web
-npm run dev              # Start Next.js dev server with Turbopack
-npm run build            # Build Next.js app with Turbopack
-npm run start            # Start production server
-npm run lint             # Run ESLint
+cd apps/marketing/web
+pnpm dev                 # Start Next.js dev server with Turbopack
+pnpm build               # Build Next.js app with Turbopack
+pnpm start               # Start production server
+pnpm lint                # Run ESLint
 ```
 
 ### Type Generation Workflow
 After schema changes:
 ```bash
-cd apps/studio
-npm run typegen          # Extracts schema + generates TypeScript types
+cd apps/marketing/studio
+pnpm typegen             # Extracts schema + generates TypeScript types
 ```
 
 ## Architecture
@@ -55,33 +57,34 @@ npm run typegen          # Extracts schema + generates TypeScript types
 ### Monorepo Structure
 ```
 apps/
-├── studio/              # Sanity Studio (port 3333)
-│   ├── src/
-│   │   ├── schemaTypes/ # Content schemas
-│   │   │   ├── documents/   # Document types (page, blog, product, etc.)
-│   │   │   ├── definitions/ # Reusable field definitions
-│   │   │   └── blocks/      # Block content types
-│   │   ├── actions/     # Custom document actions (workflow)
-│   │   ├── components/  # Studio UI components
-│   │   └── utils/       # Helper functions
-│   ├── sanity.config.ts # Studio configuration
-│   └── location.ts      # Presentation tool locations
-│
-├── web/                 # Next.js 15 frontend
-│   ├── src/
-│   │   ├── app/         # App Router pages
-│   │   │   ├── api/draft-mode/ # Draft mode endpoints
-│   │   │   └── blog/    # Blog pages
-│   │   ├── components/  # React components
-│   │   ├── lib/sanity/  # Sanity client, queries, types
-│   │   └── middleware.ts # Redirect handling
-│   └── next.config.ts
+├── marketing/
+│   ├── studio/          # Sanity Studio (port 3333)
+│   │   ├── src/
+│   │   │   ├── schemaTypes/ # Content schemas
+│   │   │   │   ├── documents/   # Document types (page, blog, product, etc.)
+│   │   │   │   ├── definitions/ # Reusable field definitions
+│   │   │   │   └── blocks/      # Block content types
+│   │   │   ├── actions/     # Custom document actions (workflow)
+│   │   │   ├── components/  # Studio UI components
+│   │   │   └── utils/       # Helper functions
+│   │   ├── sanity.config.ts # Studio configuration
+│   │   └── location.ts      # Presentation tool locations
+│   │
+│   └── web/             # Next.js 15 frontend
+│       ├── src/
+│       │   ├── app/     # App Router pages
+│       │   │   ├── api/draft-mode/ # Draft mode endpoints
+│       │   │   └── blog/    # Blog pages
+│       │   ├── components/  # React components
+│       │   ├── lib/sanity/  # Sanity client, queries, types
+│       │   └── middleware.ts # Redirect handling
+│       └── next.config.ts
 │
 functions/               # Sanity blueprints (serverless functions)
 ├── auto-increment/      # Auto-increment ID function
 └── test-function/       # Example function
 
-packages/                # Shared packages
+packages/                # Shared packages (using workspace:* protocol)
 ├── ui/                  # Shared UI components
 ├── eslint-config/       # ESLint configurations
 └── typescript-config/   # TypeScript configurations
@@ -91,7 +94,7 @@ packages/                # Shared packages
 
 The Studio uses a well-organized schema structure:
 
-**`apps/studio/src/schemaTypes/index.ts`** - Combines all schemas:
+**`apps/marketing/studio/src/schemaTypes/index.ts`** - Combines all schemas:
 - `definitions/` - Reusable field definitions
 - `documents/` - Document types (top-level content)
 - `blocks/` - Block content types
@@ -105,7 +108,7 @@ The Studio uses a well-organized schema structure:
 
 ### Web App Integration
 
-**Sanity Client:** `apps/web/src/lib/sanity/`
+**Sanity Client:** `apps/marketing/web/src/lib/sanity/`
 - `client.ts` - Base Sanity client
 - `live.ts` - Live preview setup
 - `queries.ts` - GROQ queries
@@ -125,7 +128,7 @@ The Studio uses a well-organized schema structure:
 
 ### Custom Workflow System
 
-**Location:** `apps/studio/src/actions/workflowAction.ts`
+**Location:** `apps/marketing/studio/src/actions/workflowAction.ts`
 
 Custom document actions for content approval workflow:
 - `SmartPublishAction` - Replaces default publish, checks workflow state
@@ -148,13 +151,13 @@ Custom document actions for content approval workflow:
 **Functions:**
 - `auto-increment` - Automatically assigns sequential IDs to `productAutoIncrement` documents on creation
 - Triggered by document events (create, update, delete)
-- Deployed with `npm run deploy:functions`
+- Deployed with `pnpm deploy:functions`
 
 ## Key Technical Details
 
 ### Studio Configuration
 
-**Plugins enabled** (`apps/studio/sanity.config.ts`):
+**Plugins enabled** (`apps/marketing/studio/sanity.config.ts`):
 - `structureTool` - Content management interface
 - `visionTool` - GROQ query testing
 - `presentationTool` - Live preview with Next.js integration
@@ -228,12 +231,14 @@ To add workflow to new document type:
 
 1. Define in `sanity.blueprint.ts`
 2. Implement in `functions/[name]/index.ts`
-3. Deploy with `npm run deploy:functions`
+3. Deploy with `pnpm deploy:functions`
 4. Test using Studio or API
 
 ## Important Notes
 
+- **Package Manager:** This project uses pnpm with workspace protocol for monorepo dependencies
 - **Monorepo:** This is a Turborepo. Run commands from root or app directory as needed.
+- **Workspace Dependencies:** Internal packages use `workspace:*` protocol (e.g., `@repo/ui: "workspace:*"`)
 - **Git branch:** Currently on `feat/sanity-next` testing Sanity's next version
 - **Type safety:** Web app uses generated types from Studio schema
 - **Preview mode:** Uses Next.js draft mode, toggled via API routes
