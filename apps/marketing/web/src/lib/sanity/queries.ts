@@ -92,6 +92,25 @@ export const BLOG_POST = defineQuery(`
   }
 `);
 
+const BLOG_CARD = defineQuery(`
+  *[_type == "blog" && publishedAt < now() && !(_id in path("drafts.**"))]{
+    _id,
+    _type,
+    title,
+    slug,
+    image {
+      asset->{
+        _ref,
+        metadata {
+          dimensions,
+          blurHash
+        }
+      }
+    },
+    publishedAt,
+  }
+`);
+
 /**
  * Query for redirect matching a pathname
  */

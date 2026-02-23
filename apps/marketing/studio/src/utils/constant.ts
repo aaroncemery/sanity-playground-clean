@@ -1,4 +1,4 @@
-import {ComposeIcon, CogIcon, InsertAboveIcon, SearchIcon} from '@sanity/icons'
+import {CogIcon, SearchIcon} from 'lucide-react'
 import type {FieldGroupDefinition} from 'sanity'
 import {ALL_FIELDS_GROUP} from 'sanity'
 
@@ -18,7 +18,6 @@ export const GROUPS: FieldGroupDefinition[] = [
   },
   {
     name: GROUP.MAIN_CONTENT,
-    icon: ComposeIcon,
     title: 'Content',
     default: true,
   },
@@ -29,7 +28,6 @@ export const GROUPS: FieldGroupDefinition[] = [
   },
   {
     name: GROUP.OG,
-    icon: InsertAboveIcon,
     title: 'Open Graph',
   },
   {

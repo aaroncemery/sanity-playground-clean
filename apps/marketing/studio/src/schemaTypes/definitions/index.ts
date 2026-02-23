@@ -9,6 +9,7 @@ import {
   nestedModalTestRichText,
 } from './nested-modal-test'
 import {link} from './link'
+import {cta} from './cta'
 
 export const definitions = [
   richText,
@@ -21,4 +22,5 @@ export const definitions = [
   nestedModalLevel3,
   nestedModalTestRichText,
   link,
+  cta,
 ]

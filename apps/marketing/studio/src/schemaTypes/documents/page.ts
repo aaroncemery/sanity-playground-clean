@@ -52,6 +52,7 @@ export const page = defineType({
         defineArrayMember({type: 'hero'}),
         defineArrayMember({type: 'features'}),
         defineArrayMember({type: 'textMedia'}),
+        defineArrayMember({type: 'cta'}),
         defineArrayMember({type: 'ctaSection'}),
         defineArrayMember({type: 'faqSection'}),
         defineArrayMember({type: 'statsSection'}),
