@@ -9,6 +9,8 @@ import {
   Footprints,
   ArrowRightLeft,
   Clock,
+  AlertTriangle,
+  Megaphone,
 } from 'lucide-react'
 
 export const structure: StructureResolver = (S) =>
@@ -58,6 +60,20 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem('navigation').title('Navigation').icon(Navigation),
               S.documentTypeListItem('footer').title('Footer').icon(Footprints),
               S.documentTypeListItem('redirect').title('Redirects').icon(ArrowRightLeft),
+
+              S.divider(),
+
+              S.listItem()
+                .title('Maintenance Banner')
+                .icon(AlertTriangle)
+                .child(
+                  S.document().schemaType('maintenanceBanner').documentId('maintenanceBanner'),
+                ),
+
+              S.listItem()
+                .title('Promo Banner')
+                .icon(Megaphone)
+                .child(S.document().schemaType('promoBanner').documentId('promoBanner')),
             ]),
         ),
 

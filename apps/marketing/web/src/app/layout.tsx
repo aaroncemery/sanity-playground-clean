@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { draftMode } from "next/headers";
-import { SanityLive } from "@/lib/sanity/live";
+import { SanityLive, sanityFetch } from "@/lib/sanity/live";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { MaintenanceBanner } from "@/components/MaintenanceBanner";
+import { PromoBanner } from "@/components/PromoBanner";
+import { MAINTENANCE_BANNER, PROMO_BANNER } from "@/lib/sanity/queries";
 import "./globals.css";
 
 const inter = Inter({
@@ -31,6 +34,12 @@ export default async function RootLayout({
 }) {
   const isDraftMode = (await draftMode()).isEnabled;
 
+  const [{ data: maintenanceBannerData }, { data: promoBannerData }] =
+    await Promise.all([
+      sanityFetch({ query: MAINTENANCE_BANNER }),
+      sanityFetch({ query: PROMO_BANNER }),
+    ]);
+
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="antialiased">
@@ -41,9 +50,11 @@ export default async function RootLayout({
           Skip to main content
         </a>
         <Navigation />
-        <main id="main-content" className="pt-20">
-          {children}
-        </main>
+        <div className="pt-20">
+          <PromoBanner data={promoBannerData} />
+          <MaintenanceBanner data={maintenanceBannerData} />
+        </div>
+        <main id="main-content">{children}</main>
         <Footer />
         <SanityLive />
         {isDraftMode && <VisualEditing />}

@@ -162,6 +162,34 @@ export type Hero = {
   backgroundVariant?: "light" | "dark" | "gradient";
 };
 
+export type PromoBanner = {
+  _id: string;
+  _type: "promoBanner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  enabled?: boolean;
+  headline: string;
+  subtext?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  startDate?: string;
+  endDate?: string;
+};
+
+export type MaintenanceBanner = {
+  _id: string;
+  _type: "maintenanceBanner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  enabled?: boolean;
+  message: string;
+  severity: "info" | "warning" | "error";
+  scheduledStart?: string;
+  scheduledEnd?: string;
+};
+
 export type Footer = {
   _id: string;
   _type: "footer";
@@ -786,6 +814,8 @@ export type AllSanitySchemaTypes =
   | TextMedia
   | Features
   | Hero
+  | PromoBanner
+  | MaintenanceBanner
   | Footer
   | SanityImageCrop
   | SanityImageHotspot

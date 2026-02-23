@@ -125,6 +125,34 @@ export const REDIRECT_BY_PATH = defineQuery(`
 `);
 
 /**
+ * Query the singleton maintenance banner
+ */
+export const MAINTENANCE_BANNER = defineQuery(`
+  *[_type == "maintenanceBanner" && _id == "maintenanceBanner"][0]{
+    enabled,
+    message,
+    severity,
+    scheduledStart,
+    scheduledEnd
+  }
+`);
+
+/**
+ * Query the singleton promo banner
+ */
+export const PROMO_BANNER = defineQuery(`
+  *[_type == "promoBanner" && _id == "promoBanner"][0]{
+    enabled,
+    headline,
+    subtext,
+    ctaText,
+    ctaUrl,
+    startDate,
+    endDate
+  }
+`);
+
+/**
  * Query the singleton homepage
  */
 export const HOME = defineQuery(`
