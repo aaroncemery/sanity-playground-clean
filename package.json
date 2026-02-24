@@ -15,7 +15,8 @@
     "dev:burger-haven-studio": "turbo run dev --filter=@jitb/burger-haven-studio",
     "dev:burger-haven-frontend": "turbo run dev --filter=@jitb/burger-haven-frontend",
     "build:burger-haven": "turbo run build --filter=@jitb/burger-haven-*",
-    "burger-haven:typegen": "cd apps/burger-haven/studio && pnpm run typegen"
+    "burger-haven:typegen": "cd apps/burger-haven/studio && pnpm run typegen",
+    "deploy:burger-haven-studio": "cd apps/burger-haven/studio && sanity deploy"
   },
   "devDependencies": {
     "@sanity/blueprints": "^0.2.0",
