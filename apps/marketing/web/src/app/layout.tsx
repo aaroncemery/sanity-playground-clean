@@ -49,11 +49,20 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <Navigation />
-        <div className="pt-20">
+        {/* Fixed header: nav + banners stack together */}
+        <div className="fixed inset-x-0 top-0 z-50">
+          <Navigation />
           <PromoBanner data={promoBannerData} />
           <MaintenanceBanner data={maintenanceBannerData} />
         </div>
+
+        {/* Invisible spacer in normal flow — matches the fixed header height exactly */}
+        <div aria-hidden="true" className="invisible">
+          <Navigation />
+          <PromoBanner data={promoBannerData} />
+          <MaintenanceBanner data={maintenanceBannerData} />
+        </div>
+
         <main id="main-content">{children}</main>
         <Footer />
         <SanityLive />

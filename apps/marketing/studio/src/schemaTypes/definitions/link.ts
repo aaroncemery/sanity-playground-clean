@@ -11,7 +11,11 @@ export const link = defineType({
       title: 'Link Text',
       description: 'The text that will be displayed for this link',
       validation: (rule) =>
-        rule.required().error('Link text is required').max(50).warning('Keep link text under 50 characters'),
+        rule
+          .required()
+          .error('Link text is required')
+          .max(50)
+          .warning('Keep link text under 50 characters'),
     }),
     defineField({
       name: 'linkType',

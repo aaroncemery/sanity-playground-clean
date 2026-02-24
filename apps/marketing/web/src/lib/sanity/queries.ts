@@ -145,8 +145,16 @@ export const PROMO_BANNER = defineQuery(`
     enabled,
     headline,
     subtext,
-    ctaText,
-    ctaUrl,
+    cta {
+      text,
+      linkType,
+      internalLink->{
+        _type,
+        "slug": slug.current
+      },
+      externalUrl,
+      openInNewTab
+    },
     startDate,
     endDate
   }

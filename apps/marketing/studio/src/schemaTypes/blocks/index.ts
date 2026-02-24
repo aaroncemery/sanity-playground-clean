@@ -6,6 +6,7 @@ import {faqSection} from './faqSection'
 import {statsSection} from './statsSection'
 import {testimonials} from './testimonials'
 import {leftRightContent} from './left-right-content'
+import {pageObject} from './pageObject'
 
 export const blocks = [
   hero,
@@ -16,4 +17,5 @@ export const blocks = [
   statsSection,
   testimonials,
   leftRightContent,
+  pageObject,
 ]

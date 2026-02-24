@@ -20,7 +20,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <header className="bg-background/80 backdrop-blur-md border-b border-border">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         {/* Logo */}
         <div className="flex lg:flex-1">
