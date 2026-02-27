@@ -1,0 +1,25 @@
+{
+  "name": "@jitb/burger-haven-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "sanity dev --port 3340",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typegen": "sanity schema extract && sanity typegen generate"
+  },
+  "dependencies": {
+    "lucide-react": "^0.511.0",
+    "@sanity/vision": "^5.11.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sanity": "^5.11.0",
+    "styled-components": "^6.1.18"
+  },
+  "devDependencies": {
+    "@sanity/eslint-config-studio": "^5.0.2",
+    "@types/react": "^19.2.13",
+    "eslint": "^9.28",
+    "typescript": "^5.8"
+  }
+}
