@@ -30,6 +30,25 @@ export const catalogWriteClient = createClient({
   token: process.env.SANITY_API_TOKEN,
 })
 
+// Read client for jde-demo dataset (sandbox for sync demo — safe to wipe)
+// useCdn: true — syncs run every few hours, CDN staleness (seconds) is irrelevant.
+// These reads are free and don't count against API quota.
+export const jdeDemoClient = createClient({
+  projectId,
+  dataset: 'jdedemo',
+  apiVersion,
+  useCdn: true,
+})
+
+// Write client for jde-demo dataset
+export const jdeDemoWriteClient = createClient({
+  projectId,
+  dataset: 'jdedemo',
+  apiVersion,
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+})
+
 // Image URL builders
 export const catalogImageBuilder = imageUrlBuilder(catalogClient)
 export const contentImageBuilder = imageUrlBuilder(contentClient)

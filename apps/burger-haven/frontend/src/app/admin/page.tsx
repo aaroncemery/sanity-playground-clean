@@ -33,6 +33,12 @@ export default async function AdminDashboardPage() {
               >
                 ⚡ Validation Demo
               </Link>
+              <Link
+                href="/admin/sync-demo"
+                className="bg-bh-gold hover:bg-yellow-500 text-bh-dark px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                🔄 Sync Demo
+              </Link>
             </nav>
           </div>
         </div>

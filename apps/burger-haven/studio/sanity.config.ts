@@ -52,4 +52,26 @@ export default defineConfig([
       types: [menuItem, promotion, seasonalCampaign, region],
     },
   },
+
+  // ============================================================
+  // WORKSPACE 3: JDE Sync Demo
+  // Sandbox dataset for the sync architecture demo. Safe to wipe.
+  // ============================================================
+  {
+    name: 'jde-demo-workspace',
+    title: 'JDE Sync Demo',
+    subtitle: 'Sandbox — safe to wipe and reset',
+    projectId: 'a09jbdjz',
+    dataset: 'jdedemo',
+    basePath: '/jde-demo',
+
+    plugins: [
+      structureTool(),
+      visionTool(),
+    ],
+
+    schema: {
+      types: [product],
+    },
+  },
 ])
