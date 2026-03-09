@@ -39,11 +39,23 @@ export const blog = defineType({
       validation: (rule) => [
         rule.required().error('A description is required'),
         rule
-          .min(140)
-          .warning('The description should be at least 140 characters for optimal SEO visibility'),
-        rule
           .max(160)
           .warning('The description should be less than 160 characters for optimal SEO visibility'),
+        // DEMO: validation context — access the full document from within a rule.
+        // Here we skip the min-length SEO warning when the page is set to noIndex,
+        // because content that won't be crawled doesn't need SEO-optimized descriptions.
+        rule.custom((value, context) => {
+          const doc = context.document as {seo?: {noIndex?: boolean}} | undefined
+          if (doc?.seo?.noIndex) return true // skip — page won't be crawled anyway
+          if (value && value.length < 140) {
+            return {
+              message:
+                'The description should be at least 140 characters for optimal SEO visibility',
+              level: 'warning' as const,
+            }
+          }
+          return true
+        }),
       ],
     }),
     defineField({
@@ -111,6 +123,17 @@ export const blog = defineType({
       type: 'nestedModalTestRichText',
       title: 'Nested Modal Test Rich Text',
       group: GROUP.MAIN_CONTENT,
+      // DEMO: validation context — rule.custom() skips validation when the main
+      // content field is also empty, avoiding double "empty content" warnings.
+      // This prevents noisy validation while a post is still being drafted.
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const doc = context.document as {content?: unknown[]} | undefined
+          // skip: if the main content is also empty, don't pile on extra errors here
+          const mainContentEmpty = !doc?.content || (doc.content as unknown[]).length === 0
+          if (mainContentEmpty) return true
+          return true // placeholder — extend with real rules as needed
+        }),
     }),
     defineField({
       name: 'seo',

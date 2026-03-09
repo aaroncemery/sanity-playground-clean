@@ -25,6 +25,10 @@ const richTextMembers = [
           type: 'object',
           title: 'External Link',
           icon: LinkIcon,
+          // DEMO: paste a URL with text selected to auto-create a link.
+          // Sanity's PT editor auto-detects URLs on paste because the `href` field
+          // is typed as `url` — when text is selected and a URL is pasted the dialog
+          // opens pre-filled with the URL. No extra runtime config is required.
           fields: [
             defineField({
               name: 'href',

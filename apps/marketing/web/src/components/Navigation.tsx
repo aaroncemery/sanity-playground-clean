@@ -13,6 +13,8 @@ const navigation = [
   { name: "Pricing", href: "/pricing" },
   { name: "Contact", href: "/contact" },
   { name: "Blog", href: "/blog" },
+  { name: "Updates", href: "/updates" },
+  { name: "Demos", href: "/demos" },
 ];
 
 export function Navigation() {

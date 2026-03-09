@@ -1,0 +1,20 @@
+name: Deploy Sanity Blueprint
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Blueprint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy Sanity Blueprint
+        uses: sanity-io/deploy-blueprint-action@v1
+        with:
+          sanity-auth-token: ${{ secrets.SANITY_AUTH_TOKEN }}

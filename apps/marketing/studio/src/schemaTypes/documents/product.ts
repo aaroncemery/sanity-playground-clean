@@ -68,6 +68,42 @@ export const product = defineType({
         disableActions: ['add', 'remove', 'duplicate'],
       },
     }),
+    // DEMO: conditional multi-schema reference
+    // contentType controls which document type the featuredContent reference points to.
+    // The reference field's options.filter dynamically restricts allowed types at query time.
+    defineField({
+      name: 'contentType',
+      type: 'string',
+      title: 'Content Type',
+      description: 'Choose the type of content to feature on this product page',
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        list: [
+          {title: 'Blog Post', value: 'blog'},
+          {title: 'Page', value: 'page'},
+        ],
+        layout: 'radio',
+      },
+    }),
+    // DEMO: conditional multi-schema reference — allowed reference targets shift based on contentType
+    defineField({
+      name: 'featuredContent',
+      type: 'reference',
+      title: 'Featured Content',
+      description: 'Link a blog post or page to feature alongside this product',
+      group: GROUP.MAIN_CONTENT,
+      to: [{type: 'blog'}, {type: 'page'}],
+      hidden: ({document}) => !(document as any)?.contentType,
+      options: {
+        // DEMO: conditional multi-schema reference — filter restricts the reference picker
+        // to only show documents matching the selected contentType
+        filter: ({document}: {document: Record<string, unknown>}) => {
+          const contentType = document?.contentType as string | undefined
+          if (!contentType) return {}
+          return {filter: '_type == $contentType', params: {contentType}}
+        },
+      },
+    }),
     defineField({
       name: 'seo',
       type: 'seo',

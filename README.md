@@ -133,3 +133,21 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.com/docs/reference/configuration)
 - [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+
+## CI/CD
+
+### Blueprint Deployment
+
+Sanity Blueprints (serverless functions) are automatically deployed to production on every push to `main` via the [deploy-blueprint.yml](.github/workflows/deploy-blueprint.yml) GitHub Actions workflow.
+
+**Setup:**
+
+1. Go to your repository **Settings → Secrets and variables → Actions**
+2. Add a new secret named `SANITY_AUTH_TOKEN` with a Sanity API token that has deploy permissions
+3. The workflow uses the official `sanity-io/deploy-blueprint-action` to deploy `sanity.blueprint.ts` at the root of this repo
+
+**Manual trigger:**
+
+You can also trigger the workflow manually from the Actions tab using `workflow_dispatch`.
+
+> **Never hardcode your token** — always use `${{ secrets.SANITY_AUTH_TOKEN }}` in the workflow file.

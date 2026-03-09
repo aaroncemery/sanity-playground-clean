@@ -14,9 +14,9 @@ export default defineCliConfig({
     appId: 'h259ayt97hlr1e9hfr3b33so',
   },
   typegen: {
-    path: ['../../apps/web/src/**/*.{ts,tsx,js,jsx}', '../../apps/studio/src/**/*.{ts,tsx,js,jsx}'],
+    path: ['./src/**/*.{ts,tsx}', '../web/src/**/*.{ts,tsx}'],
     schema: './schema.json',
-    generates: '../../apps/web/src/lib/sanity/sanity.types.ts',
+    generates: '../web/src/lib/sanity/sanity.types.ts',
     formatGeneratedCode: true,
   },
   mediaLibrary: {

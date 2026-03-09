@@ -162,6 +162,57 @@ export type Hero = {
   backgroundVariant?: "light" | "dark" | "gradient";
 };
 
+export type PromoBanner = {
+  _id: string;
+  _type: "promoBanner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  enabled?: boolean;
+  headline: string;
+  subtext: string;
+  cta?: Link;
+  startDate?: string;
+  endDate?: string;
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "page";
+};
+
+export type HomeReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "home";
+};
+
+export type Link = {
+  _type: "link";
+  text: string;
+  linkType: "internal" | "external";
+  internalLink?: PageReference | HomeReference;
+  externalUrl?: string;
+  openInNewTab?: boolean;
+  ariaLabel?: string;
+};
+
+export type MaintenanceBanner = {
+  _id: string;
+  _type: "maintenanceBanner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  enabled?: boolean;
+  message: string;
+  severity: "info" | "warning" | "error";
+  scheduledStart?: string;
+  scheduledEnd?: string;
+};
+
 export type Footer = {
   _id: string;
   _type: "footer";
@@ -273,30 +324,6 @@ export type Navigation = {
   ctaButton?: Link;
 };
 
-export type PageReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "page";
-};
-
-export type HomeReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "home";
-};
-
-export type Link = {
-  _type: "link";
-  text: string;
-  linkType: "internal" | "external";
-  internalLink?: PageReference | HomeReference;
-  externalUrl?: string;
-  openInNewTab?: boolean;
-  ariaLabel?: string;
-};
-
 export type Redirect = {
   _id: string;
   _type: "redirect";
@@ -309,93 +336,25 @@ export type Redirect = {
   permanent?: boolean;
 };
 
-export type ProductAutoIncrement = {
+export type Changelog = {
   _id: string;
-  _type: "productAutoIncrement";
+  _type: "changelog";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  orderRank?: string;
-  title?: string;
-  autoId?: number;
-  slug: Slug;
-  pageSections?: Array<
-    {
-      _key: string;
-    } & Hero
-  >;
-  ogTitle?: string;
-  ogDescription?: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  seoImage?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  seoNoIndex?: boolean;
-  seoHideFromLists?: boolean;
-  workflowMetadata?: WorkflowMetadata;
-};
-
-export type WorkflowMetadata = {
-  _type: "workflowMetadata";
-  workflowStatus?: WorkflowStatus;
-  submittedAt?: string;
-  submittedBy?: string;
-  approvedAt?: string;
-  approvedBy?: string;
-  rejectionReason?: string;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
-export type Counter = {
-  _id: string;
-  _type: "counter";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  value?: number;
-};
-
-export type Product = {
-  _id: string;
-  _type: "product";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  orderRank?: string;
   title: string;
   slug: Slug;
-  pageSections?: Array<
-    {
-      _key: string;
-    } & Hero
-  >;
+  releaseMonth: string;
+  summary: string;
+  features?: Array<{
+    title: string;
+    description?: RichText;
+    badge?: "new" | "improved" | "studio" | "api" | "developer";
+    docsUrl?: string;
+    _type: "feature";
+    _key: string;
+  }>;
   seo?: Seo;
-  openGraph?: OpenGraph;
-  workflowMetadata?: WorkflowMetadata;
-};
-
-export type OpenGraph = {
-  _type: "openGraph";
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
 };
 
 export type Seo = {
@@ -411,75 +370,6 @@ export type Seo = {
   };
   noIndex?: boolean;
   hideFromLists?: boolean;
-};
-
-export type Home = {
-  _id: string;
-  _type: "home";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  pageSections?: Array<
-    | ({
-        _key: string;
-      } & Hero)
-    | ({
-        _key: string;
-      } & Features)
-    | ({
-        _key: string;
-      } & TextMedia)
-    | ({
-        _key: string;
-      } & CtaSection)
-    | ({
-        _key: string;
-      } & FaqSection)
-    | ({
-        _key: string;
-      } & StatsSection)
-    | ({
-        _key: string;
-      } & Testimonials)
-  >;
-  seo?: Seo;
-  openGraph?: OpenGraph;
-};
-
-export type Page = {
-  _id: string;
-  _type: "page";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  pageSections?: Array<
-    | ({
-        _key: string;
-      } & Hero)
-    | ({
-        _key: string;
-      } & Features)
-    | ({
-        _key: string;
-      } & TextMedia)
-    | ({
-        _key: string;
-      } & CtaSection)
-    | ({
-        _key: string;
-      } & FaqSection)
-    | ({
-        _key: string;
-      } & StatsSection)
-    | ({
-        _key: string;
-      } & Testimonials)
-  >;
-  seo?: Seo;
-  openGraph?: OpenGraph;
 };
 
 export type BlogReference = {
@@ -527,6 +417,114 @@ export type RichText = Array<
       _key: string;
     }
 >;
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type Cta = {
+  _type: "cta";
+  title?: string;
+  description?: string;
+  buttons: Array<{
+    link: Link;
+    variant?: "primary" | "secondary" | "outline";
+    _key: string;
+  }>;
+  alignment?: "left" | "center" | "right";
+  size?: "small" | "medium" | "large";
+  style?: "none" | "subtle" | "accent" | "card";
+};
+
+export type Home = {
+  _id: string;
+  _type: "home";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & Features)
+    | ({
+        _key: string;
+      } & TextMedia)
+    | ({
+        _key: string;
+      } & Cta)
+    | ({
+        _key: string;
+      } & CtaSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & StatsSection)
+    | ({
+        _key: string;
+      } & Testimonials)
+  >;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+};
+
+export type OpenGraph = {
+  _type: "openGraph";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
+export type Page = {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  pageSections?: Array<
+    | ({
+        _key: string;
+      } & Hero)
+    | ({
+        _key: string;
+      } & Features)
+    | ({
+        _key: string;
+      } & TextMedia)
+    | ({
+        _key: string;
+      } & Cta)
+    | ({
+        _key: string;
+      } & CtaSection)
+    | ({
+        _key: string;
+      } & FaqSection)
+    | ({
+        _key: string;
+      } & StatsSection)
+    | ({
+        _key: string;
+      } & Testimonials)
+  >;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+};
 
 export type NestedModalTestRichText = Array<
   | {
@@ -650,6 +648,16 @@ export type WorkflowStatus =
   | "approved"
   | "published"
   | "rejected";
+
+export type WorkflowMetadata = {
+  _type: "workflowMetadata";
+  workflowStatus?: WorkflowStatus;
+  submittedAt?: string;
+  submittedBy?: string;
+  approvedAt?: string;
+  approvedBy?: string;
+  rejectionReason?: string;
+};
 
 export type Blog = {
   _id: string;
@@ -826,30 +834,31 @@ export type AllSanitySchemaTypes =
   | TextMedia
   | Features
   | Hero
+  | PromoBanner
+  | PageReference
+  | HomeReference
+  | Link
+  | MaintenanceBanner
   | Footer
   | SanityImageCrop
   | SanityImageHotspot
   | Navigation
-  | PageReference
-  | HomeReference
-  | Link
   | Redirect
-  | ProductAutoIncrement
-  | WorkflowMetadata
-  | Slug
-  | Counter
-  | Product
-  | OpenGraph
+  | Changelog
   | Seo
-  | Home
-  | Page
   | BlogReference
   | RichText
+  | Slug
+  | Cta
+  | Home
+  | OpenGraph
+  | Page
   | NestedModalTestRichText
   | NestedModalLevel3
   | NestedModalLevel2
   | NestedModalLevel1
   | WorkflowStatus
+  | WorkflowMetadata
   | Blog
   | SanityVideoMetadataPlayback
   | SanityVideoMetadata
@@ -865,12 +874,6 @@ export type AllSanitySchemaTypes =
   | Geopoint;
 
 export declare const internalGroqTypeReferenceTo: unique symbol;
-
-type ArrayOf<T> = Array<
-  T & {
-    _key: string;
-  }
->;
 
 // Source: ../web/src/lib/sanity/queries.ts
 // Variable: BLOG_POSTS
@@ -960,6 +963,26 @@ export type BLOG_POST_RESULT = {
 } | null;
 
 // Source: ../web/src/lib/sanity/queries.ts
+// Variable: BLOG_CARD
+// Query: *[_type == "blog" && publishedAt < now() && !(_id in path("drafts.**"))]{    _id,    _type,    title,    slug,    image {      asset->{        _ref,        metadata {          dimensions,          blurHash        }      }    },    publishedAt,  }
+export type BLOG_CARD_RESULT = Array<{
+  _id: string;
+  _type: "blog";
+  title: string;
+  slug: Slug;
+  image: {
+    asset: {
+      _ref: null;
+      metadata: {
+        dimensions: SanityImageDimensions | null;
+        blurHash: string | null;
+      } | null;
+    } | null;
+  };
+  publishedAt: string;
+}>;
+
+// Source: ../web/src/lib/sanity/queries.ts
 // Variable: REDIRECT_BY_PATH
 // Query: *[_type == "redirect" && from == $pathname][0]{    _id,    from,    to,    type,    permanent  }
 export type REDIRECT_BY_PATH_RESULT = {
@@ -971,6 +994,44 @@ export type REDIRECT_BY_PATH_RESULT = {
 } | null;
 
 // Source: ../web/src/lib/sanity/queries.ts
+// Variable: MAINTENANCE_BANNER
+// Query: *[_type == "maintenanceBanner" && _id == "maintenanceBanner"][0]{    enabled,    message,    severity,    scheduledStart,    scheduledEnd  }
+export type MAINTENANCE_BANNER_RESULT = {
+  enabled: boolean | null;
+  message: string;
+  severity: "error" | "info" | "warning";
+  scheduledStart: string | null;
+  scheduledEnd: string | null;
+} | null;
+
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: PROMO_BANNER
+// Query: *[_type == "promoBanner" && _id == "promoBanner"][0]{    enabled,    headline,    subtext,    cta {      text,      linkType,      internalLink->{        _type,        "slug": slug.current      },      externalUrl,      openInNewTab    },    startDate,    endDate  }
+export type PROMO_BANNER_RESULT = {
+  enabled: boolean | null;
+  headline: string;
+  subtext: string;
+  cta: {
+    text: string;
+    linkType: "external" | "internal";
+    internalLink:
+      | {
+          _type: "home";
+          slug: null;
+        }
+      | {
+          _type: "page";
+          slug: string;
+        }
+      | null;
+    externalUrl: string | null;
+    openInNewTab: boolean | null;
+  } | null;
+  startDate: string | null;
+  endDate: string | null;
+} | null;
+
+// Source: ../web/src/lib/sanity/queries.ts
 // Variable: HOME
 // Query: *[_type == "home" && _id == "home"][0]{    _id,    _type,    title,    pageSections[] {      _type,      _key,      _type == "hero" => {        headline,        subtext,        primaryCta {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        secondaryCta {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        media {          ...,          asset->        },        variant,        backgroundVariant      },      _type == "features" => {        title,        description,        layout,        features[] {          icon,          title,          description        }      },      _type == "textMedia" => {        heading,        content,        media {          ...,          asset->        },        mediaPosition,        reverse      },      _type == "ctaSection" => {        heading,        description,        primaryButton {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        secondaryButton {          text,          linkType,          internalLink->{            _type,            "slug": slug.current          },          externalUrl,          openInNewTab        },        backgroundVariant      },      _type == "faqSection" => {        title,        faqs[] {          question,          answer        }      },      _type == "statsSection" => {        title,        layout,        stats[] {          value,          label,          description        }      },      _type == "testimonials" => {        title,        testimonials[] {          quote,          author,          role,          company,          avatar {            ...,            asset->          }        }      }    },    seo {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      },      noIndex,      hideFromLists    },    openGraph {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      }    }  }
 export type HOME_RESULT = {
@@ -978,6 +1039,10 @@ export type HOME_RESULT = {
   _type: "home";
   title: string;
   pageSections: Array<
+    | {
+        _type: "cta";
+        _key: string;
+      }
     | {
         _type: "ctaSection";
         _key: string;
@@ -1236,6 +1301,10 @@ export type PAGE_BY_SLUG_RESULT = {
   slug: string;
   pageSections: Array<
     | {
+        _type: "cta";
+        _key: string;
+      }
+    | {
         _type: "ctaSection";
         _key: string;
         heading: string;
@@ -1483,14 +1552,112 @@ export type PAGE_BY_SLUG_RESULT = {
   } | null;
 } | null;
 
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: CHANGELOG_INDEX
+// Query: *[_type == "changelog"] | order(releaseMonth desc) {    _id,    title,    "slug": slug.current,    releaseMonth,    summary,    "featureCount": count(features),    "badges": array::unique(features[].badge)  }
+export type CHANGELOG_INDEX_RESULT = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  releaseMonth: string;
+  summary: string;
+  featureCount: number | null;
+  badges: Array<
+    "api" | "developer" | "improved" | "new" | "studio" | null
+  > | null;
+}>;
+
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: CHANGELOG_BY_SLUG
+// Query: *[_type == "changelog" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    releaseMonth,    summary,    features[] {      _key,      title,      description,      badge,      docsUrl    },    seo {      title,      description,      image {        asset->{          _ref,          metadata {            dimensions,            blurHash          }        }      },      noIndex    }  }
+export type CHANGELOG_BY_SLUG_RESULT = {
+  _id: string;
+  title: string;
+  slug: string;
+  releaseMonth: string;
+  summary: string;
+  features: Array<{
+    _key: string;
+    title: string;
+    description: RichText | null;
+    badge: "api" | "developer" | "improved" | "new" | "studio" | null;
+    docsUrl: string | null;
+  }> | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    image: {
+      asset: {
+        _ref: null;
+        metadata: {
+          dimensions: SanityImageDimensions | null;
+          blurHash: string | null;
+        } | null;
+      } | null;
+    } | null;
+    noIndex: boolean | null;
+  } | null;
+} | null;
+
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: SEMANTIC_SEARCH
+// Query: *[_type == "blog" && !seo.noIndex    && (title match $query || description match $query)  ] | order(publishedAt desc) [0...10] {    _id,    title,    description,    "slug": slug.current,    publishedAt,    image {      asset->{        _ref,        metadata {          dimensions,          lqip,          blurHash        }      },      alt    }  }
+export type SEMANTIC_SEARCH_RESULT = Array<{
+  _id: string;
+  title: string;
+  description: string;
+  slug: string;
+  publishedAt: string;
+  image: {
+    asset: {
+      _ref: null;
+      metadata: {
+        dimensions: SanityImageDimensions | null;
+        lqip: string | null;
+        blurHash: string | null;
+      } | null;
+    } | null;
+    alt: null;
+  };
+}>;
+
+// Source: ../web/src/lib/sanity/queries.ts
+// Variable: AGENT_CONTEXT_SEARCH
+// Query: {    "blogs": *[_type == "blog" && (title match $query || description match $query)][0...5]{      _id,      _type,      title,      description,      "slug": slug.current,      publishedAt    },    "changelogs": *[_type == "changelog" && (title match $query || summary match $query)][0...3]{      _id,      _type,      title,      "slug": slug.current,      releaseMonth,      summary    }  }
+export type AGENT_CONTEXT_SEARCH_RESULT = {
+  blogs: Array<{
+    _id: string;
+    _type: "blog";
+    title: string;
+    description: string;
+    slug: string;
+    publishedAt: string;
+  }>;
+  changelogs: Array<{
+    _id: string;
+    _type: "changelog";
+    title: string;
+    slug: string;
+    releaseMonth: string;
+    summary: string;
+  }>;
+};
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "blog" && !seo.noIndex] | order(publishedAt desc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    description,\n    "slug": slug.current,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash,\n          palette\n        }\n      },\n      hotspot,\n      crop,\n      alt\n    },\n    publishedAt,\n    "seoNoIndex": seo.noIndex,\n    "seoHideFromLists": seo.hideFromLists\n  }\n': BLOG_POSTS_RESULT;
     '\n  *[_type == "blog" && slug.current == $slug][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    description,\n    "slug": slug.current,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash,\n          palette\n        }\n      },\n      hotspot,\n      crop,\n      alt\n    },\n    publishedAt,\n    content,\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': BLOG_POST_RESULT;
+    '\n  *[_type == "blog" && publishedAt < now() && !(_id in path("drafts.**"))]{\n    _id,\n    _type,\n    title,\n    slug,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          blurHash\n        }\n      }\n    },\n    publishedAt,\n  }\n': BLOG_CARD_RESULT;
     '\n  *[_type == "redirect" && from == $pathname][0]{\n    _id,\n    from,\n    to,\n    type,\n    permanent\n  }\n': REDIRECT_BY_PATH_RESULT;
+    '\n  *[_type == "maintenanceBanner" && _id == "maintenanceBanner"][0]{\n    enabled,\n    message,\n    severity,\n    scheduledStart,\n    scheduledEnd\n  }\n': MAINTENANCE_BANNER_RESULT;
+    '\n  *[_type == "promoBanner" && _id == "promoBanner"][0]{\n    enabled,\n    headline,\n    subtext,\n    cta {\n      text,\n      linkType,\n      internalLink->{\n        _type,\n        "slug": slug.current\n      },\n      externalUrl,\n      openInNewTab\n    },\n    startDate,\n    endDate\n  }\n': PROMO_BANNER_RESULT;
     '\n  *[_type == "home" && _id == "home"][0]{\n    _id,\n    _type,\n    title,\n    pageSections[] {\n      _type,\n      _key,\n      _type == "hero" => {\n        headline,\n        subtext,\n        primaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        media {\n          ...,\n          asset->\n        },\n        variant,\n        backgroundVariant\n      },\n      _type == "features" => {\n        title,\n        description,\n        layout,\n        features[] {\n          icon,\n          title,\n          description\n        }\n      },\n      _type == "textMedia" => {\n        heading,\n        content,\n        media {\n          ...,\n          asset->\n        },\n        mediaPosition,\n        reverse\n      },\n      _type == "ctaSection" => {\n        heading,\n        description,\n        primaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        backgroundVariant\n      },\n      _type == "faqSection" => {\n        title,\n        faqs[] {\n          question,\n          answer\n        }\n      },\n      _type == "statsSection" => {\n        title,\n        layout,\n        stats[] {\n          value,\n          label,\n          description\n        }\n      },\n      _type == "testimonials" => {\n        title,\n        testimonials[] {\n          quote,\n          author,\n          role,\n          company,\n          avatar {\n            ...,\n            asset->\n          }\n        }\n      }\n    },\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': HOME_RESULT;
     '\n  *[_type == "page" && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    pageSections[] {\n      _type,\n      _key,\n      _type == "hero" => {\n        headline,\n        subtext,\n        primaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryCta {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        media {\n          ...,\n          asset->\n        },\n        variant,\n        backgroundVariant\n      },\n      _type == "features" => {\n        title,\n        description,\n        layout,\n        features[] {\n          icon,\n          title,\n          description\n        }\n      },\n      _type == "textMedia" => {\n        heading,\n        content,\n        media {\n          ...,\n          asset->\n        },\n        mediaPosition,\n        reverse\n      },\n      _type == "ctaSection" => {\n        heading,\n        description,\n        primaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        secondaryButton {\n          text,\n          linkType,\n          internalLink->{\n            _type,\n            "slug": slug.current\n          },\n          externalUrl,\n          openInNewTab\n        },\n        backgroundVariant\n      },\n      _type == "faqSection" => {\n        title,\n        faqs[] {\n          question,\n          answer\n        }\n      },\n      _type == "statsSection" => {\n        title,\n        layout,\n        stats[] {\n          value,\n          label,\n          description\n        }\n      },\n      _type == "testimonials" => {\n        title,\n        testimonials[] {\n          quote,\n          author,\n          role,\n          company,\n          avatar {\n            ...,\n            asset->\n          }\n        }\n      }\n    },\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex,\n      hideFromLists\n    },\n    openGraph {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      }\n    }\n  }\n': PAGE_BY_SLUG_RESULT;
+    '\n  *[_type == "changelog"] | order(releaseMonth desc) {\n    _id,\n    title,\n    "slug": slug.current,\n    releaseMonth,\n    summary,\n    "featureCount": count(features),\n    "badges": array::unique(features[].badge)\n  }\n': CHANGELOG_INDEX_RESULT;
+    '\n  *[_type == "changelog" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    releaseMonth,\n    summary,\n    features[] {\n      _key,\n      title,\n      description,\n      badge,\n      docsUrl\n    },\n    seo {\n      title,\n      description,\n      image {\n        asset->{\n          _ref,\n          metadata {\n            dimensions,\n            blurHash\n          }\n        }\n      },\n      noIndex\n    }\n  }\n': CHANGELOG_BY_SLUG_RESULT;
+    '\n  *[_type == "blog" && !seo.noIndex\n    && (title match $query || description match $query)\n  ] | order(publishedAt desc) [0...10] {\n    _id,\n    title,\n    description,\n    "slug": slug.current,\n    publishedAt,\n    image {\n      asset->{\n        _ref,\n        metadata {\n          dimensions,\n          lqip,\n          blurHash\n        }\n      },\n      alt\n    }\n  }\n': SEMANTIC_SEARCH_RESULT;
+    '\n  {\n    "blogs": *[_type == "blog" && (title match $query || description match $query)][0...5]{\n      _id,\n      _type,\n      title,\n      description,\n      "slug": slug.current,\n      publishedAt\n    },\n    "changelogs": *[_type == "changelog" && (title match $query || summary match $query)][0...3]{\n      _id,\n      _type,\n      title,\n      "slug": slug.current,\n      releaseMonth,\n      summary\n    }\n  }\n': AGENT_CONTEXT_SEARCH_RESULT;
   }
 }
