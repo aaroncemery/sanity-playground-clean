@@ -1,4 +1,5 @@
 import { sanityFetch } from "@/lib/sanity/live";
+import { client } from "@/lib/sanity/client";
 import { CHANGELOG_INDEX, CHANGELOG_BY_SLUG } from "@/lib/sanity/queries";
 import type { CHANGELOG_BY_SLUG_RESULT } from "@/lib/sanity/queries";
 import { ChangelogBadge } from "@/components/ChangelogBadge";
@@ -111,11 +112,11 @@ export default async function ChangelogDetailPage({
 }
 
 export async function generateStaticParams() {
-  const { data: entries } = await sanityFetch({ query: CHANGELOG_INDEX });
+  const entries = await client.fetch(CHANGELOG_INDEX);
   return (entries ?? [])
-    .filter((e) => e.slug)
-    .map((e) => ({
-      slug: e.slug!.replace("updates/", ""),
+    .filter((e: { slug?: string | null }) => e.slug)
+    .map((e: { slug: string }) => ({
+      slug: e.slug.replace("updates/", ""),
     }));
 }
 
