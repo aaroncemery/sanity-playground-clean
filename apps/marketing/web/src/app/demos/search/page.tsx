@@ -1,10 +1,11 @@
 "use client";
 
-// DEMO: requires embeddings index named 'blog-content' on project a09jbdjz
-// Toggle between semantic (text::semanticSimilarity) and keyword (match) search
-// to show the difference in result quality.
+// DEMO: Dataset Embeddings + keyword search toggle
+// Semantic mode uses text::semanticSimilarity() inside score() — requires dataset embeddings enabled.
+// Enable with: sanity dataset embeddings enable <dataset> --projection='{ title, description, "body": body }'
+// Keyword mode uses standard GROQ match — no setup required.
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@sanity/client";
@@ -32,17 +33,18 @@ interface SearchResult {
 
 function buildQuery(mode: SearchMode) {
   if (mode === "semantic") {
-    // DEMO: text::semanticSimilarity() — requires embeddings index on the dataset
-    return `*[_type == "blog" && !seo.noIndex
-      && text::semanticSimilarity("blog-content", $query) > 0.3
-    ] | order(text::semanticSimilarity("blog-content", $query) desc) [0...10] {
-      _id,
-      title,
-      description,
-      "slug": slug.current,
-      publishedAt,
-      image { asset->{ _ref, metadata { lqip, dimensions } }, alt }
-    }`;
+    // DEMO: Dataset Embeddings — text::semanticSimilarity() inside score()
+    // No index name — embeddings are native to the dataset (new API, not the deprecated index API).
+    return `*[_type == "blog" && !seo.noIndex]
+      | score(text::semanticSimilarity($query))
+      | order(_score desc) [0...10] {
+        _id,
+        title,
+        description,
+        "slug": slug.current,
+        publishedAt,
+        image { asset->{ _ref, metadata { lqip, dimensions } }, alt }
+      }`;
   }
   // Keyword mode: standard GROQ match
   return `*[_type == "blog" && !seo.noIndex
@@ -63,32 +65,33 @@ export default function SearchDemoPage() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = () => {
-    if (!query.trim()) return;
+  const handleSearch = async () => {
+    if (!query.trim() || isSearching) return;
     setError(null);
-    startTransition(async () => {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const data = await (client.fetch as any)(buildQuery(mode), {
-          query: query.trim(),
-        }) as SearchResult[];
-        setResults(data ?? []);
-        setHasSearched(true);
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        if (msg.includes("semanticSimilarity") || msg.includes("embeddings")) {
-          setError(
-            "Semantic search is not configured. Set up an embeddings index named 'blog-content' on project a09jbdjz to enable this mode.",
-          );
-        } else {
-          setError(`Search failed: ${msg}`);
-        }
-        setResults([]);
-        setHasSearched(true);
+    setIsSearching(true);
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = await (client.fetch as any)(buildQuery(mode), {
+        query: query.trim(),
+      }) as SearchResult[];
+      setResults(data ?? []);
+      setHasSearched(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes("semanticSimilarity") || msg.includes("embeddings")) {
+        setError(
+          "Semantic search is not ready yet. Dataset embeddings may still be processing — try again in a few minutes.",
+        );
+      } else {
+        setError(`Search failed: ${msg}`);
       }
-    });
+      setResults([]);
+      setHasSearched(true);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   return (
@@ -127,14 +130,14 @@ export default function SearchDemoPage() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="Search blog posts…"
-            className="flex-1 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:border-transparent"
+            className="flex-1 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm text-neutral-950 placeholder:text-neutral-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:border-transparent"
           />
           <button
             onClick={handleSearch}
-            disabled={isPending || !query.trim()}
+            disabled={isSearching || !query.trim()}
             className="px-5 py-2.5 rounded-lg bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {isPending ? "Searching…" : "Search"}
+            {isSearching ? "Searching…" : "Search"}
           </button>
         </div>
 
@@ -193,7 +196,7 @@ function BlogCard({ post }: { post: SearchResult }) {
   const slugWithoutPrefix = post.slug?.replace("blog/", "") ?? "";
   return (
     <article className="flex gap-4 p-4 rounded-xl bg-white shadow-sm ring-1 ring-neutral-200 hover:shadow-md transition-shadow">
-      {post.image?.asset && (
+      {post.image?.asset?._ref && (
         <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100">
           <Image
             src={`https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/${post.image.asset._ref

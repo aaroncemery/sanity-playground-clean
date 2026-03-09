@@ -5,8 +5,9 @@ import {schemaTypes} from './src/schemaTypes'
 import {presentationTool} from 'sanity/presentation'
 import {getPresentationUrl} from './src/utils/helper'
 import {locations} from './location'
-import structure from './src/structure'
+// import structure from './src/structure'
 import {contentDashboardPlugin} from './src/plugins/content-dashboard'
+import structure from './src/structure'
 
 import {
   SmartPublishAction,

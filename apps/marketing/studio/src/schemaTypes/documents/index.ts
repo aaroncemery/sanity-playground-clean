@@ -7,6 +7,10 @@ import {promoBanner} from './promoBanner'
 import {redirect} from './redirect'
 import {navigation} from './navigation'
 import {footer} from './footer'
+import {product} from './product'
+import {productAutoIncrement} from './product-auto-increment'
+import {counter} from './counter'
+import {workflowMetadata} from './workflow-metadata'
 
 export const documents = [
   home,
@@ -18,4 +22,8 @@ export const documents = [
   footer,
   maintenanceBanner,
   promoBanner,
+  product,
+  productAutoIncrement,
+  counter,
+  workflowMetadata,
 ]

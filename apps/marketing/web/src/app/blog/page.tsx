@@ -71,7 +71,7 @@ function BlogPostCard({ post }: { post: BlogPost }) {
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200 hover:shadow-lg transition-all duration-300">
       {/* Image */}
-      {post.image && (
+      {post.image?.asset?._ref && (
         <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={urlFor(post.image).width(600).height(340).url()}
