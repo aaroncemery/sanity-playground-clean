@@ -13,11 +13,9 @@ interface Source {
   slug: string;
 }
 
-// Simple conversation message (kept separate from Anthropic SDK types — server handles those)
 interface ConversationMessage {
   role: "user" | "assistant";
   content: string;
-  // Assistant-only metadata
   sources?: Source[];
   toolCalls?: string[];
   isStreaming?: boolean;
@@ -46,16 +44,12 @@ export default function AgentDemoPage() {
     setInput("");
     setIsLoading(true);
 
-    // Append user message
     setMessages((prev) => [...prev, { role: "user", content: question }]);
-
-    // Append streaming placeholder for the assistant reply
     setMessages((prev) => [
       ...prev,
       { role: "assistant", content: "", isStreaming: true, toolCalls: [], sources: [] },
     ]);
 
-    // Build the conversation history to send (exclude the empty streaming placeholder)
     const history: Array<{ role: "user" | "assistant"; content: string }> = messages
       .filter((m) => !m.isStreaming && m.content !== "")
       .map((m) => ({ role: m.role, content: m.content }));
@@ -80,7 +74,6 @@ export default function AgentDemoPage() {
       let accTools: string[] = [];
       let finalSources: Source[] = [];
 
-      // Parse SSE stream
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -149,45 +142,47 @@ export default function AgentDemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <div className="mx-auto w-full max-w-3xl px-6 pt-8 pb-4 flex-shrink-0">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <h1 className="text-4xl font-bold tracking-tight text-neutral-950">
+      <div className="mx-auto w-full max-w-2xl px-6 pt-10 pb-6 flex-shrink-0">
+        <Link
+          href="/demos"
+          className="text-xs text-neutral-600 hover:text-white transition-colors uppercase tracking-widest mb-8 inline-block"
+        >
+          ← Demos
+        </Link>
+        <div className="flex items-baseline justify-between gap-4 mb-2">
+          <h1 className="text-2xl font-semibold text-white tracking-tight">
             Agent Context
           </h1>
           {messages.length > 0 && !isLoading && (
             <button
               onClick={() => setMessages([])}
-              className="mt-2 text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+              className="text-xs text-neutral-700 hover:text-white transition-colors"
             >
-              Clear chat
+              Clear
             </button>
           )}
         </div>
-        <p className="text-neutral-600 mb-3">
+        <p className="text-sm text-neutral-500 leading-relaxed">
           Ask anything about the blog or platform updates. Claude uses a{" "}
-          <code className="text-xs bg-neutral-100 px-1 py-0.5 rounded">groq_query</code>{" "}
-          tool to search Sanity on demand, then streams its answer with cited sources.
+          <code className="font-mono text-neutral-400 text-xs">groq_query</code>{" "}
+          tool to search Sanity on demand, then streams its answer with sources.
         </p>
-        <div className="text-xs text-neutral-400 p-3 rounded-lg bg-neutral-50 border border-neutral-200 mb-4">
-          {/* DEMO: Agent Context pattern */}
-          <strong>How it works:</strong> Claude decides which GROQ queries to run, executes
-          them against the Sanity dataset in real time, and grounds its answer in the
-          retrieved content — no pre-fetching or hardcoded queries needed.
-        </div>
       </div>
 
-      {/* Chat area */}
-      <div className="flex-1 mx-auto w-full max-w-3xl px-6 pb-4 flex flex-col gap-4">
+      {/* Chat */}
+      <div className="flex-1 mx-auto w-full max-w-2xl px-6 pb-6 flex flex-col gap-6 overflow-y-auto">
         {messages.length === 0 && (
-          <div className="flex flex-col gap-2 py-6">
-            <p className="text-sm text-neutral-400 mb-2">Try asking:</p>
+          <div className="flex flex-col gap-2 pt-2">
+            <p className="text-xs text-neutral-600 uppercase tracking-widest mb-3">
+              Try asking
+            </p>
             {SUGGESTIONS.map((s) => (
               <button
                 key={s}
                 onClick={() => setInput(s)}
-                className="text-left text-sm px-4 py-3 rounded-lg border border-neutral-200 hover:border-neutral-400 hover:bg-neutral-50 transition-colors text-neutral-700"
+                className="text-left text-sm px-4 py-3 rounded-xl border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-900 text-neutral-500 hover:text-white transition-all duration-200"
               >
                 {s}
               </button>
@@ -196,15 +191,15 @@ export default function AgentDemoPage() {
         )}
 
         {messages.map((msg, i) => (
-          <ChatBubble key={i} message={msg} />
+          <ChatMessage key={i} message={msg} />
         ))}
 
         <div ref={bottomRef} />
       </div>
 
-      {/* Input — natural bottom of flex column */}
-      <div className="flex-shrink-0 bg-white border-t border-neutral-200 py-4">
-        <div className="mx-auto max-w-3xl px-6 flex gap-3">
+      {/* Input bar */}
+      <div className="flex-shrink-0 border-t border-neutral-800/50 py-4">
+        <div className="mx-auto max-w-2xl px-6 flex gap-2 items-center">
           <input
             type="text"
             value={input}
@@ -212,14 +207,18 @@ export default function AgentDemoPage() {
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
             placeholder="Ask about blog posts or platform updates…"
             disabled={isLoading}
-            className="flex-1 rounded-xl border border-neutral-300 px-4 py-3 text-sm text-neutral-950 placeholder:text-neutral-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:border-transparent disabled:opacity-50"
+            className="flex-1 bg-neutral-900 border border-neutral-800 focus:border-neutral-700 rounded-xl px-4 py-3 text-sm text-white placeholder:text-neutral-600 outline-none transition-colors disabled:opacity-40"
           />
           <button
             onClick={handleSend}
             disabled={isLoading || !input.trim()}
-            className="px-5 py-3 rounded-xl bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-10 h-10 rounded-xl bg-white text-neutral-950 text-sm font-bold hover:bg-neutral-200 disabled:opacity-20 disabled:cursor-not-allowed transition-all flex items-center justify-center shrink-0"
           >
-            {isLoading ? "…" : "Send"}
+            {isLoading ? (
+              <span className="w-1 h-4 bg-neutral-400 rounded-full animate-pulse" />
+            ) : (
+              "↑"
+            )}
           </button>
         </div>
       </div>
@@ -227,85 +226,74 @@ export default function AgentDemoPage() {
   );
 }
 
-function ChatBubble({ message }: { message: ConversationMessage }) {
+function ChatMessage({ message }: { message: ConversationMessage }) {
   const isUser = message.role === "user";
 
+  if (isUser) {
+    return (
+      <div className="flex justify-end">
+        <div className="max-w-[78%] text-sm text-white bg-neutral-800 rounded-2xl rounded-br-sm px-4 py-2.5 leading-relaxed">
+          {message.content}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`flex gap-3 items-start ${isUser ? "flex-row-reverse" : ""}`}>
-      <div
-        className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-          isUser ? "bg-neutral-200 text-neutral-700" : "bg-neutral-950 text-white"
-        }`}
-      >
-        {isUser ? "You" : "AI"}
-      </div>
-
-      <div className="flex flex-col gap-2 max-w-[80%]">
-        {/* Tool call indicator — shown while Claude is querying Sanity */}
-        {!isUser && message.toolCalls && message.toolCalls.length > 0 && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-50 border border-violet-200 text-xs text-violet-700">
-            <span
-              className={`w-1.5 h-1.5 rounded-full bg-violet-500 ${
-                message.isStreaming && message.content === "" ? "animate-pulse" : ""
-              }`}
-            />
-            Searched Sanity with{" "}
-            <code className="font-mono">{message.toolCalls[message.toolCalls.length - 1]}</code>
-          </div>
-        )}
-
-        {/* Message bubble */}
-        {(message.content || message.isStreaming) && (
-          <div
-            className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
-              isUser
-                ? "bg-neutral-950 text-white"
-                : message.isError
-                ? "bg-amber-50 text-amber-800 border border-amber-200"
-                : "bg-neutral-100 text-neutral-900"
+    <div className="flex flex-col gap-2.5 max-w-[88%]">
+      {/* Tool call indicator */}
+      {message.toolCalls && message.toolCalls.length > 0 && (
+        <div className="flex items-center gap-1.5">
+          <span
+            className={`w-1 h-1 rounded-full bg-neutral-600 shrink-0 ${
+              message.isStreaming && !message.content ? "animate-pulse" : ""
             }`}
-          >
-            {message.content}
-            {message.isStreaming && (
-              <span className="inline-block w-1 h-4 bg-neutral-400 ml-0.5 animate-pulse align-text-bottom rounded-sm" />
-            )}
-          </div>
-        )}
+          />
+          <span className="text-xs font-mono text-neutral-600">
+            queried{" "}
+            <span className="text-neutral-500">
+              {message.toolCalls[message.toolCalls.length - 1]}
+            </span>
+          </span>
+        </div>
+      )}
 
-        {/* Sources */}
-        {!isUser && !message.isStreaming && message.sources && message.sources.length > 0 && (
-          <div className="px-2">
-            <p className="text-xs text-neutral-400 mb-1.5 font-medium">
-              Sources retrieved from Sanity:
-            </p>
-            <div className="flex flex-col gap-1">
-              {message.sources.map((source) => (
-                <Link
-                  key={source._id}
-                  href={source.slug}
-                  className="text-xs text-neutral-600 hover:text-neutral-950 transition-colors flex items-center gap-1.5"
-                >
-                  <span className="text-neutral-400">
-                    {source._type === "blog"
-                      ? "📝"
-                      : source._type === "changelog"
-                      ? "📋"
-                      : "📄"}
-                  </span>
-                  {source.title}
-                  <span className="text-neutral-300">↗</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+      {/* Message */}
+      {(message.content || message.isStreaming) && (
+        <div
+          className={`text-sm leading-relaxed whitespace-pre-wrap ${
+            message.isError ? "text-amber-400" : "text-neutral-300"
+          }`}
+        >
+          {message.content}
+          {message.isStreaming && (
+            <span className="inline-block w-px h-[1em] bg-neutral-500 ml-0.5 animate-pulse align-text-bottom" />
+          )}
+        </div>
+      )}
 
-        {!isUser && !message.isStreaming && !message.isError && message.sources?.length === 0 && (
-          <p className="text-xs text-neutral-400 px-2">
-            No matching documents found in Sanity.
-          </p>
+      {/* Sources */}
+      {!message.isStreaming && message.sources && message.sources.length > 0 && (
+        <div className="mt-1 flex flex-col gap-1">
+          <p className="text-xs text-neutral-700 mb-0.5">Sources</p>
+          {message.sources.map((source) => (
+            <Link
+              key={source._id}
+              href={source.slug}
+              className="text-xs text-neutral-600 hover:text-white transition-colors"
+            >
+              {source.title} ↗
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {!message.isStreaming &&
+        !message.isError &&
+        message.sources?.length === 0 &&
+        message.content && (
+          <p className="text-xs text-neutral-700">No matching documents found.</p>
         )}
-      </div>
     </div>
   );
 }

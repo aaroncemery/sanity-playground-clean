@@ -12,18 +12,24 @@ export async function middleware(request: NextRequest) {
 
   const url = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(REDIRECT_BY_PATH)}&$pathname=${encodeURIComponent(JSON.stringify(pathname))}`;
 
-  const response = await fetch(url);
-  const { result: redirect } = await response.json();
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(3000) });
+    if (!response.ok) return NextResponse.next();
 
-  if (redirect) {
-    const destination =
-      redirect.type === "internal"
-        ? new URL(redirect.to, request.url)
-        : redirect.to;
+    const { result: redirect } = await response.json();
 
-    const status = redirect.permanent ? 308 : 307;
+    if (redirect) {
+      const destination =
+        redirect.type === "internal"
+          ? new URL(redirect.to, request.url)
+          : redirect.to;
 
-    return NextResponse.redirect(destination, status);
+      const status = redirect.permanent ? 308 : 307;
+
+      return NextResponse.redirect(destination, status);
+    }
+  } catch {
+    // If Sanity is unreachable, pass through rather than breaking navigation
   }
 
   return NextResponse.next();

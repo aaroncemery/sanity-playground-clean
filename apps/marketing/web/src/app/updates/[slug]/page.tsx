@@ -4,7 +4,6 @@ import { CHANGELOG_INDEX, CHANGELOG_BY_SLUG } from "@/lib/sanity/queries";
 import type { CHANGELOG_BY_SLUG_RESULT } from "@/lib/sanity/queries";
 import { ChangelogBadge } from "@/components/ChangelogBadge";
 import { PortableText } from "@portabletext/react";
-import { Border } from "@/components/Border";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -20,21 +19,32 @@ function formatMonth(dateStr: string | null | undefined): string {
   });
 }
 
-function FeatureCard({ feature }: { feature: Feature }) {
+function FeatureRow({ feature }: { feature: Feature }) {
   return (
-    <div className="flex flex-col gap-3 p-6 rounded-xl bg-white shadow-sm ring-1 ring-neutral-200">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold text-neutral-950">{feature.title}</h3>
+    <div className="py-6 border-b border-neutral-800/60 last:border-0">
+      <div className="flex items-start justify-between gap-4 mb-3">
+        <h3 className="text-sm font-semibold text-white">{feature.title}</h3>
         {feature.badge && (
           <ChangelogBadge
-            badge={feature.badge as "new" | "improved" | "studio" | "api" | "developer"}
+            badge={
+              feature.badge as
+                | "new"
+                | "improved"
+                | "studio"
+                | "api"
+                | "developer"
+            }
           />
         )}
       </div>
 
       {feature.description && (
-        <div className="prose prose-sm prose-neutral max-w-none text-neutral-600">
-          <PortableText value={feature.description as Parameters<typeof PortableText>[0]["value"]} />
+        <div className="prose prose-sm prose-invert max-w-none text-neutral-400 mb-3 [&_p]:my-1 [&_code]:bg-neutral-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-neutral-200 [&_code]:text-xs">
+          <PortableText
+            value={
+              feature.description as Parameters<typeof PortableText>[0]["value"]
+            }
+          />
         </div>
       )}
 
@@ -43,9 +53,9 @@ function FeatureCard({ feature }: { feature: Feature }) {
           href={feature.docsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="self-start text-sm font-medium text-neutral-950 hover:text-neutral-600 transition-colors"
+          className="text-xs text-neutral-500 hover:text-white transition-colors"
         >
-          Learn more →
+          Docs →
         </a>
       )}
     </div>
@@ -70,42 +80,47 @@ export default async function ChangelogDetailPage({
   const features = entry.features ?? [];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-24 pb-16">
-        <div className="mx-auto max-w-3xl">
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8 pt-16 pb-24">
+        {/* Back */}
+        <div className="pt-4 mb-10">
           <Link
             href="/updates"
-            className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors mb-8 inline-block"
+            className="text-xs text-neutral-600 hover:text-white transition-colors uppercase tracking-widest"
           >
             ← Platform Updates
           </Link>
-          <Border className="mb-8" />
-          <p className="text-base font-semibold text-neutral-500 mb-3">
+        </div>
+
+        {/* Header */}
+        <div className="mb-10">
+          <p className="text-xs font-medium text-neutral-500 uppercase tracking-widest mb-3">
             {formatMonth(entry.releaseMonth)}
           </p>
-          <h1 className="text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl mb-6">
+          <h1 className="text-3xl font-semibold text-white mb-4 tracking-tight">
             {entry.title}
           </h1>
           {entry.summary && (
-            <p className="text-lg leading-8 text-neutral-600">{entry.summary}</p>
+            <p className="text-neutral-400 leading-relaxed max-w-2xl">
+              {entry.summary}
+            </p>
           )}
         </div>
-      </div>
 
-      {/* Features */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-24">
-        <div className="mx-auto max-w-3xl">
-          {features.length === 0 ? (
-            <p className="text-neutral-600">No features listed for this release.</p>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {features.map((feature, i) => (
-                <FeatureCard key={feature._key ?? i} feature={feature} />
-              ))}
-            </div>
-          )}
-        </div>
+        <div className="h-px bg-neutral-800 mb-2" />
+
+        {/* Features */}
+        {features.length === 0 ? (
+          <p className="py-8 text-sm text-neutral-600">
+            No features listed for this release.
+          </p>
+        ) : (
+          <div>
+            {features.map((feature, i) => (
+              <FeatureRow key={feature._key ?? i} feature={feature} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -130,6 +145,7 @@ export async function generateMetadata({
   const { data: entry } = await sanityFetch({
     query: CHANGELOG_BY_SLUG,
     params: { slug: fullSlug },
+    stega: false,
   });
 
   if (!entry) return { title: "Not Found" };
@@ -140,10 +156,6 @@ export async function generateMetadata({
   return {
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      type: "article",
-    },
+    openGraph: { title, description, type: "article" },
   };
 }

@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { Border } from "@/components/Border";
 import type { Metadata } from "next";
 
 interface DemoCard {
   href: string;
   title: string;
   description: string;
-  emoji: string;
   tags: string[];
 }
 
@@ -14,7 +12,6 @@ const demos: DemoCard[] = [
   {
     href: "/demos/search",
     title: "Semantic Search",
-    emoji: "🧠",
     description:
       "Compare keyword (GROQ match) and semantic (text::semanticSimilarity) search over blog content. Toggle between modes to see how meaning-based retrieval finds relevant articles that keyword search misses.",
     tags: ["GROQ", "Embeddings", "Search"],
@@ -22,7 +19,6 @@ const demos: DemoCard[] = [
   {
     href: "/demos/agent",
     title: "Agent Context",
-    emoji: "🤖",
     description:
       "Ask questions about blog posts and platform updates. The agent uses GROQ to retrieve relevant Sanity documents as context before calling Claude, then surfaces a Sources panel showing exactly which documents were retrieved.",
     tags: ["Claude AI", "GROQ", "RAG"],
@@ -31,55 +27,53 @@ const demos: DemoCard[] = [
 
 export default function DemosPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-24 pb-16">
-        <div className="mx-auto max-w-4xl text-center">
-          <Border className="mb-8" />
-          <h1 className="text-5xl font-bold tracking-tight text-neutral-950 sm:text-6xl mb-6">
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8 pt-16 pb-24">
+        {/* Header */}
+        <div className="mb-12 pt-4">
+          <p className="text-xs font-medium text-neutral-600 uppercase tracking-widest mb-4">
             Demos
+          </p>
+          <h1 className="text-3xl font-semibold text-white mb-3 tracking-tight">
+            Interactive demos
           </h1>
-          <p className="text-xl leading-8 text-neutral-600 mb-12">
-            Interactive demos showing Sanity platform capabilities — semantic
-            search, AI-assisted content retrieval, and more.
+          <p className="text-neutral-500 leading-relaxed max-w-lg">
+            Live examples of Sanity platform capabilities — semantic search, AI
+            content retrieval, and more.
           </p>
         </div>
-      </div>
 
-      {/* Demo grid */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="h-px bg-neutral-800 mb-2" />
+
+        {/* Demo list */}
+        <div>
           {demos.map((demo) => (
             <Link
               key={demo.href}
               href={demo.href}
-              className="group relative flex flex-col rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200 hover:shadow-lg hover:ring-neutral-300 transition-all duration-200 p-8 overflow-hidden"
+              className="group flex items-start justify-between gap-6 py-7 border-b border-neutral-800/60 last:border-0"
             >
-              {/* Background accent */}
-              <div className="absolute inset-0 bg-gradient-to-br from-neutral-50 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
-
-              <div className="relative">
-                <div className="text-4xl mb-4">{demo.emoji}</div>
-                <h2 className="text-2xl font-bold text-neutral-950 mb-3 group-hover:text-neutral-700 transition-colors">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-base font-semibold text-neutral-200 group-hover:text-white transition-colors mb-2">
                   {demo.title}
                 </h2>
-                <p className="text-neutral-600 leading-relaxed mb-6">
+                <p className="text-sm text-neutral-500 leading-relaxed mb-4 max-w-xl">
                   {demo.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {demo.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-600"
+                      className="inline-flex items-center rounded px-2 py-0.5 text-xs font-medium bg-neutral-800 text-neutral-400 ring-1 ring-neutral-700"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="mt-6 flex items-center text-sm font-medium text-neutral-950 group-hover:translate-x-1 transition-transform">
-                  Try the demo →
-                </div>
               </div>
+              <span className="text-neutral-600 group-hover:text-neutral-300 group-hover:translate-x-0.5 transition-all text-sm shrink-0 mt-1">
+                →
+              </span>
             </Link>
           ))}
         </div>

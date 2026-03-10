@@ -26,15 +26,16 @@ interface SearchResult {
   slug: string;
   publishedAt?: string;
   image?: {
-    asset?: { _ref: string; metadata?: { lqip?: string; dimensions?: { width: number; height: number } } };
+    asset?: {
+      _ref: string;
+      metadata?: { lqip?: string; dimensions?: { width: number; height: number } };
+    };
     alt?: string;
   };
 }
 
 function buildQuery(mode: SearchMode) {
   if (mode === "semantic") {
-    // DEMO: Dataset Embeddings — text::semanticSimilarity() inside score()
-    // No index name — embeddings are native to the dataset (new API, not the deprecated index API).
     return `*[_type == "blog" && !seo.noIndex]
       | score(text::semanticSimilarity($query))
       | order(_score desc) [0...10] {
@@ -46,7 +47,6 @@ function buildQuery(mode: SearchMode) {
         image { asset->{ _ref, metadata { lqip, dimensions } }, alt }
       }`;
   }
-  // Keyword mode: standard GROQ match
   return `*[_type == "blog" && !seo.noIndex
     && (title match $query + "*" || description match $query + "*")
   ] | order(publishedAt desc) [0...10] {
@@ -73,16 +73,16 @@ export default function SearchDemoPage() {
     setIsSearching(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = await (client.fetch as any)(buildQuery(mode), {
+      const data = (await (client.fetch as any)(buildQuery(mode), {
         query: query.trim(),
-      }) as SearchResult[];
+      })) as SearchResult[];
       setResults(data ?? []);
       setHasSearched(true);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("semanticSimilarity") || msg.includes("embeddings")) {
         setError(
-          "Semantic search is not ready yet. Dataset embeddings may still be processing — try again in a few minutes.",
+          "Semantic search is not ready yet. Dataset embeddings may still be processing — try again in a few minutes."
         );
       } else {
         setError(`Search failed: ${msg}`);
@@ -95,94 +95,94 @@ export default function SearchDemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-4xl px-6 lg:px-8 pt-24 pb-24">
-        <h1 className="text-4xl font-bold tracking-tight text-neutral-950 mb-3">
-          Semantic Search Demo
-        </h1>
-        <p className="text-neutral-600 mb-10">
-          Compare keyword search with semantic similarity search over blog
-          content.
-        </p>
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-3xl px-6 lg:px-8 pt-10 pb-24">
+        {/* Back */}
+        <Link
+          href="/demos"
+          className="text-xs text-neutral-600 hover:text-white transition-colors uppercase tracking-widest mb-10 inline-block"
+        >
+          ← Demos
+        </Link>
 
-        {/* Mode toggle */}
-        <div className="flex gap-2 mb-6">
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="text-2xl font-semibold text-white mb-3 tracking-tight">
+            Semantic Search
+          </h1>
+          <p className="text-sm text-neutral-500 leading-relaxed max-w-lg">
+            Compare keyword{" "}
+            <code className="font-mono text-neutral-400 text-xs">match</code>{" "}
+            with{" "}
+            <code className="font-mono text-neutral-400 text-xs">
+              text::semanticSimilarity()
+            </code>{" "}
+            over blog content.
+          </p>
+        </div>
+
+        {/* Mode toggle — underline tabs */}
+        <div className="flex gap-8 border-b border-neutral-800 mb-8">
           {(["keyword", "semantic"] as SearchMode[]).map((m) => (
             <button
               key={m}
               onClick={() => setMode(m)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`pb-3 text-sm transition-colors relative ${
                 mode === m
-                  ? "bg-neutral-950 text-white"
-                  : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                  ? "text-white"
+                  : "text-neutral-600 hover:text-neutral-300"
               }`}
             >
-              {m === "keyword" ? "🔤 Keyword (match)" : "🧠 Semantic (similarity)"}
+              {m === "keyword" ? "Keyword" : "Semantic"}
+              {mode === m && (
+                <span className="absolute bottom-0 left-0 right-0 h-px bg-white" />
+              )}
             </button>
           ))}
         </div>
 
+        {/* Mode note */}
+        <p className="text-xs font-mono text-neutral-600 mb-7">
+          {mode === "semantic"
+            ? "text::semanticSimilarity() — conceptual matching, requires dataset embeddings"
+            : "match operator — keyword and stem matching, no setup required"}
+        </p>
+
         {/* Search input */}
-        <div className="flex gap-3 mb-8">
+        <div className="flex gap-2 mb-10">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="Search blog posts…"
-            className="flex-1 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm text-neutral-950 placeholder:text-neutral-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:border-transparent"
+            className="flex-1 bg-neutral-900 border border-neutral-800 focus:border-neutral-700 rounded-xl px-4 py-3 text-sm text-white placeholder:text-neutral-600 outline-none transition-colors"
           />
           <button
             onClick={handleSearch}
             disabled={isSearching || !query.trim()}
-            className="px-5 py-2.5 rounded-lg bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-5 py-3 rounded-xl bg-white text-neutral-950 text-sm font-medium hover:bg-neutral-200 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
           >
-            {isSearching ? "Searching…" : "Search"}
+            {isSearching ? "…" : "Search"}
           </button>
         </div>
 
-        {/* Mode description */}
-        <div
-          className={`mb-8 p-4 rounded-lg text-sm ${
-            mode === "semantic"
-              ? "bg-purple-50 border border-purple-200 text-purple-800"
-              : "bg-blue-50 border border-blue-200 text-blue-800"
-          }`}
-        >
-          {mode === "semantic" ? (
-            <>
-              <strong>Semantic mode</strong> uses{" "}
-              <code className="font-mono">text::semanticSimilarity()</code> to
-              find conceptually similar content even when exact keywords don't
-              match. Requires an embeddings index.
-            </>
-          ) : (
-            <>
-              <strong>Keyword mode</strong> uses GROQ{" "}
-              <code className="font-mono">match</code> for fast full-text
-              search. Results match on exact words and stems.
-            </>
-          )}
-        </div>
-
-        {/* Error state */}
+        {/* Error */}
         {error && (
-          <div className="mb-8 p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm">
-            <strong>⚠️ Note:</strong> {error}
-          </div>
+          <p className="text-sm text-amber-500 mb-8 leading-relaxed">{error}</p>
         )}
 
         {/* Results */}
         {hasSearched && !error && (
           <>
-            <p className="text-sm text-neutral-500 mb-4">
+            <p className="text-xs text-neutral-600 uppercase tracking-widest mb-4">
               {results.length === 0
-                ? "No results found."
-                : `${results.length} result${results.length !== 1 ? "s" : ""} for "${query}" (${mode} mode)`}
+                ? "No results"
+                : `${results.length} result${results.length !== 1 ? "s" : ""} · ${mode}`}
             </p>
-            <div className="flex flex-col gap-4">
+            <div className="divide-y divide-neutral-800/60">
               {results.map((post) => (
-                <BlogCard key={post._id} post={post} />
+                <BlogRow key={post._id} post={post} />
               ))}
             </div>
           </>
@@ -192,44 +192,55 @@ export default function SearchDemoPage() {
   );
 }
 
-function BlogCard({ post }: { post: SearchResult }) {
+function BlogRow({ post }: { post: SearchResult }) {
   const slugWithoutPrefix = post.slug?.replace("blog/", "") ?? "";
+  const lqip = post.image?.asset?.metadata?.lqip;
+
   return (
-    <article className="flex gap-4 p-4 rounded-xl bg-white shadow-sm ring-1 ring-neutral-200 hover:shadow-md transition-shadow">
+    <Link
+      href={`/blog/${slugWithoutPrefix}`}
+      className="group flex items-start gap-4 py-4 first:pt-0 last:pb-0"
+    >
+      {/* Thumbnail */}
       {post.image?.asset?._ref && (
-        <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+        <div className="relative w-14 h-10 flex-shrink-0 overflow-hidden rounded bg-neutral-800">
           <Image
             src={`https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/${post.image.asset._ref
               .replace("image-", "")
               .replace(/-(\w+)$/, ".$1")}`}
             alt={post.image.alt || post.title}
             fill
-            className="object-cover"
-            placeholder={post.image.asset.metadata?.lqip ? "blur" : "empty"}
-            blurDataURL={post.image.asset.metadata?.lqip}
+            className="object-cover opacity-70 group-hover:opacity-100 transition-opacity"
+            placeholder={lqip ? "blur" : "empty"}
+            blurDataURL={lqip}
           />
         </div>
       )}
-      <div className="flex flex-col gap-1 min-w-0">
-        <Link
-          href={`/blog/${slugWithoutPrefix}`}
-          className="font-semibold text-neutral-950 hover:text-neutral-600 transition-colors line-clamp-1"
-        >
+
+      {/* Text */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-neutral-300 group-hover:text-white transition-colors truncate pr-4">
           {post.title}
-        </Link>
+        </p>
         {post.description && (
-          <p className="text-sm text-neutral-600 line-clamp-2">{post.description}</p>
+          <p className="text-xs text-neutral-600 line-clamp-1 mt-0.5">
+            {post.description}
+          </p>
         )}
         {post.publishedAt && (
-          <time className="text-xs text-neutral-400">
+          <time className="text-xs text-neutral-700 mt-0.5 block">
             {new Date(post.publishedAt).toLocaleDateString("en-US", {
               year: "numeric",
-              month: "short",
+              month: "long",
               day: "numeric",
             })}
           </time>
         )}
       </div>
-    </article>
+
+      <span className="text-neutral-700 group-hover:text-neutral-400 group-hover:translate-x-0.5 transition-all text-sm shrink-0 mt-0.5">
+        →
+      </span>
+    </Link>
   );
 }

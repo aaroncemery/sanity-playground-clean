@@ -2,7 +2,6 @@ import { sanityFetch } from "@/lib/sanity/live";
 import { CHANGELOG_INDEX } from "@/lib/sanity/queries";
 import type { CHANGELOG_INDEX_RESULT } from "@/lib/sanity/queries";
 import { ChangelogBadge } from "@/components/ChangelogBadge";
-import { Border } from "@/components/Border";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -16,51 +15,56 @@ function formatMonth(dateStr: string | null | undefined): string {
   });
 }
 
-function BadgePill({ badge }: { badge: string }) {
-  return (
-    <ChangelogBadge
-      badge={badge as "new" | "improved" | "studio" | "api" | "developer"}
-    />
-  );
-}
-
-function ChangelogCard({ entry }: { entry: ChangelogEntry }) {
-  const slugPath = entry.slug?.replace("updates/", "") ?? "";
-  const badges = (entry.badges ?? []).filter(Boolean).slice(0, 4);
+function ChangelogRow({ entry }: { entry: ChangelogEntry }) {
+  const slugPath = (entry.slug ?? "").replace("updates/", "");
+  const badges = (entry.badges ?? []).filter(Boolean).slice(0, 5);
 
   return (
-    <article className="group relative flex flex-col rounded-2xl bg-white shadow-sm ring-1 ring-neutral-200 hover:shadow-md transition-all duration-200 p-6">
-      <div className="flex items-start justify-between gap-4 mb-3">
-        <time className="text-sm font-medium text-neutral-500">
-          {formatMonth(entry.releaseMonth)}
-        </time>
-        <span className="text-sm text-neutral-400">
-          {entry.featureCount ?? 0}{" "}
-          {entry.featureCount === 1 ? "feature" : "features"}
+    <Link
+      href={`/updates/${slugPath}`}
+      className="group block py-8 border-b border-neutral-800/60 last:border-0"
+    >
+      <div className="flex items-start justify-between gap-6">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-neutral-500 uppercase tracking-widest mb-2">
+            {formatMonth(entry.releaseMonth)}
+          </p>
+          <h2 className="text-base font-semibold text-neutral-200 group-hover:text-white transition-colors mb-2">
+            {entry.title}
+          </h2>
+          {entry.summary && (
+            <p className="text-sm text-neutral-500 leading-relaxed line-clamp-2 mb-4 max-w-2xl">
+              {entry.summary}
+            </p>
+          )}
+          <div className="flex items-center gap-2 flex-wrap">
+            {badges.map(
+              (badge) =>
+                badge && (
+                  <ChangelogBadge
+                    key={badge}
+                    badge={
+                      badge as
+                        | "new"
+                        | "improved"
+                        | "studio"
+                        | "api"
+                        | "developer"
+                    }
+                  />
+                )
+            )}
+            <span className="text-xs text-neutral-600">
+              {entry.featureCount ?? 0}{" "}
+              {entry.featureCount === 1 ? "feature" : "features"}
+            </span>
+          </div>
+        </div>
+        <span className="text-neutral-600 group-hover:text-neutral-300 group-hover:translate-x-0.5 transition-all text-sm shrink-0 mt-1">
+          →
         </span>
       </div>
-
-      <h2 className="text-xl font-semibold text-neutral-950 mb-3 group-hover:text-neutral-700 transition-colors">
-        <Link
-          href={`/updates/${slugPath}`}
-          className="before:absolute before:inset-0"
-        >
-          {entry.title}
-        </Link>
-      </h2>
-
-      {entry.summary && (
-        <p className="text-neutral-600 line-clamp-2 flex-1 mb-4 text-sm leading-relaxed">
-          {entry.summary}
-        </p>
-      )}
-
-      {badges.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {badges.map((badge) => badge && <BadgePill key={badge} badge={badge} />)}
-        </div>
-      )}
-    </article>
+    </Link>
   );
 }
 
@@ -69,31 +73,35 @@ export default async function UpdatesPage() {
   const changelogs: CHANGELOG_INDEX_RESULT = entries ?? [];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-24 pb-16">
-        <div className="mx-auto max-w-4xl text-center">
-          <Border className="mb-8" />
-          <h1 className="text-5xl font-bold tracking-tight text-neutral-950 sm:text-6xl mb-6">
+    <div className="min-h-screen">
+      <div className="mx-auto max-w-4xl px-6 lg:px-8 pt-16 pb-24">
+        {/* Header */}
+        <div className="mb-12 pt-4">
+          <p className="text-xs font-medium text-neutral-600 uppercase tracking-widest mb-4">
             Platform Updates
+          </p>
+          <h1 className="text-3xl font-semibold text-white mb-3 tracking-tight">
+            What&rsquo;s new
           </h1>
-          <p className="text-xl leading-8 text-neutral-600 mb-12">
+          <p className="text-neutral-500 leading-relaxed max-w-lg">
             New features, improvements, and developer tools — shipped every
             month.
           </p>
         </div>
-      </div>
 
-      {/* Entries */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 pb-24">
+        <div className="h-px bg-neutral-800 mb-2" />
+
+        {/* Entries */}
         {changelogs.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-lg text-neutral-600">No updates yet. Check back soon!</p>
+          <div className="py-16 text-center">
+            <p className="text-sm text-neutral-600">
+              No updates yet. Check back soon.
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
             {changelogs.map((entry) => (
-              <ChangelogCard key={entry._id} entry={entry} />
+              <ChangelogRow key={entry._id} entry={entry} />
             ))}
           </div>
         )}
@@ -104,5 +112,6 @@ export default async function UpdatesPage() {
 
 export const metadata: Metadata = {
   title: "Platform Updates",
-  description: "New features, improvements, and developer tools shipped every month.",
+  description:
+    "New features, improvements, and developer tools shipped every month.",
 };

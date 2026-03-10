@@ -60,7 +60,7 @@ export default defineConfig({
           enable: '/api/draft-mode/enable',
         },
       },
-      draftModeSecret: 'my-secret-preview-token-12345',
+      draftModeSecret: process.env.SANITY_STUDIO_PREVIEW_SECRET,
     }),
   ],
 
