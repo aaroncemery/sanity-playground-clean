@@ -56,7 +56,7 @@ export async function generateMetadata({
     description: seoDescription,
     openGraph: {
       title: ogTitle || page.title,
-      description: ogDescription,
+      description: ogDescription ?? undefined,
       type: "website",
     },
   };
