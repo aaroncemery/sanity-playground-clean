@@ -2,7 +2,6 @@ import type {
   PortableTextComponents,
   PortableTextMarkComponentProps,
 } from "@portabletext/react";
-import type { PortableTextBlock } from "@portabletext/types";
 
 type LinkValue = {
   _type: "link";

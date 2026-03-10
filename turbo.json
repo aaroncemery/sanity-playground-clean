@@ -5,7 +5,12 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "SANITY_API_READ_TOKEN",
+        "ANTHROPIC_API_KEY",
+        "SANITY_STUDIO_PREVIEW_SECRET"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
