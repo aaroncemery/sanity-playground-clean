@@ -207,7 +207,7 @@ export default function MenuBoardPage() {
 
           {error && (
             <div className="bg-red-50 border border-red-100 rounded-2xl p-8 text-center">
-              <p className="text-red-600 font-semibold mb-1">Couldn't load menu</p>
+              <p className="text-red-600 font-semibold mb-1">Couldn&apos;t load menu</p>
               <p className="text-sm text-red-400">{error}</p>
             </div>
           )}
