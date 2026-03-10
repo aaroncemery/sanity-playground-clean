@@ -156,7 +156,7 @@ export function ValidationDemo() {
                   {result.message}
                 </p>
               </div>
-              {!result.success && result.details?.validationErrors && (
+              {!result.success && !!result.details?.validationErrors && (
                 <div className="bg-red-950 rounded-xl p-4 space-y-1">
                   {(result.details.validationErrors as string[]).map((err, i) => (
                     <p key={i} className="text-red-300 text-xs font-mono leading-relaxed">{err}</p>
