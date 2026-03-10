@@ -63,7 +63,7 @@ export const maintenanceBanner = defineType({
       severity: 'severity',
       message: 'message',
     },
-    prepare({enabled, severity, message}: {enabled: unknown; severity: string; message: string}) {
+    prepare({enabled, severity, message}: Record<string, any>) {
       return {
         title: 'Maintenance Banner',
         subtitle: `${enabled ? 'LIVE' : 'Hidden'} · ${severity ?? 'info'} · ${message ?? 'No message set'}`,

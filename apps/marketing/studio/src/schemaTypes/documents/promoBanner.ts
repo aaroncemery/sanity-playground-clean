@@ -61,17 +61,7 @@ export const promoBanner = defineType({
       startDate: 'startDate',
       endDate: 'endDate',
     },
-    prepare({
-      enabled,
-      headline,
-      startDate,
-      endDate,
-    }: {
-      enabled: boolean
-      headline: string
-      startDate: string
-      endDate: string
-    }) {
+    prepare({enabled, headline, startDate, endDate}: Record<string, any>) {
       const dateRange =
         startDate || endDate
           ? `${startDate ? startDate.slice(0, 10) : '∞'} → ${endDate ? endDate.slice(0, 10) : '∞'}`

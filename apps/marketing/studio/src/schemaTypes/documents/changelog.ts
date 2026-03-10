@@ -101,7 +101,7 @@ export const changelog = defineType({
               title: 'title',
               badge: 'badge',
             },
-            prepare({title, badge}: {title?: string; badge?: string}) {
+            prepare({title, badge}: Record<string, any>) {
               const badgeEmoji: Record<string, string> = {
                 new: '🟢',
                 improved: '🟡',
@@ -131,7 +131,7 @@ export const changelog = defineType({
       title: 'title',
       releaseMonth: 'releaseMonth',
     },
-    prepare({title, releaseMonth}: {title?: string; releaseMonth?: string}) {
+    prepare({title, releaseMonth}: Record<string, any>) {
       const monthYear = releaseMonth
         ? new Date(releaseMonth).toLocaleDateString('en-US', {month: 'long', year: 'numeric'})
         : ''
