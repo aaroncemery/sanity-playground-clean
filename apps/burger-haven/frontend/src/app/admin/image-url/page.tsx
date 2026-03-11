@@ -99,11 +99,11 @@ export default async function ImageUrlDemoPage() {
               <p className="text-xs font-semibold text-gray-700 mb-2">Two patterns — same result:</p>
               <div className="space-y-2 text-xs font-mono">
                 <div>
-                  <span className="text-gray-400">// Pattern A — builder from _ref</span>
+                  <span className="text-gray-400">{'// Pattern A — builder from _ref'}</span>
                   <div className="bg-gray-50 rounded p-2 mt-1 text-gray-700">urlForContentImage(ref).width(400).url()</div>
                 </div>
                 <div>
-                  <span className="text-gray-400">// Pattern B — asset-{'>'} in GROQ</span>
+                  <span className="text-gray-400">{'// Pattern B — asset-> in GROQ'}</span>
                   <div className="bg-gray-50 rounded p-2 mt-1 text-gray-700">heroImage {'{'} asset-{'>'}{'{'}url{'}'} {'}'}</div>
                 </div>
               </div>
