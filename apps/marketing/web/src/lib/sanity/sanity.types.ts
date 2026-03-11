@@ -162,6 +162,130 @@ export type Hero = {
   backgroundVariant?: "light" | "dark" | "gradient";
 };
 
+export type Counter = {
+  _id: string;
+  _type: "counter";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  value?: number;
+};
+
+export type ProductAutoIncrement = {
+  _id: string;
+  _type: "productAutoIncrement";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderRank?: string;
+  title?: string;
+  autoId?: number;
+  slug: Slug;
+  pageSections?: Array<
+    {
+      _key: string;
+    } & Hero
+  >;
+  ogTitle?: string;
+  ogDescription?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  seoNoIndex?: boolean;
+  seoHideFromLists?: boolean;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type BlogReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "blog";
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "page";
+};
+
+export type Product = {
+  _id: string;
+  _type: "product";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderRank?: string;
+  title: string;
+  slug: Slug;
+  pageSections?: Array<
+    {
+      _key: string;
+    } & Hero
+  >;
+  contentType?: "blog" | "page";
+  featuredContent?: BlogReference | PageReference;
+  seo?: Seo;
+  openGraph?: OpenGraph;
+};
+
+export type OpenGraph = {
+  _type: "openGraph";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
+export type Seo = {
+  _type: "seo";
+  title?: string;
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  noIndex?: boolean;
+  hideFromLists?: boolean;
+};
+
 export type PromoBanner = {
   _id: string;
   _type: "promoBanner";
@@ -174,13 +298,6 @@ export type PromoBanner = {
   cta?: Link;
   startDate?: string;
   endDate?: string;
-};
-
-export type PageReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "page";
 };
 
 export type HomeReference = {
@@ -265,22 +382,6 @@ export type Footer = {
   >;
 };
 
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-};
-
 export type Navigation = {
   _id: string;
   _type: "navigation";
@@ -357,28 +458,6 @@ export type Changelog = {
   seo?: Seo;
 };
 
-export type Seo = {
-  _type: "seo";
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  noIndex?: boolean;
-  hideFromLists?: boolean;
-};
-
-export type BlogReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "blog";
-};
-
 export type RichText = Array<
   | {
       children?: Array<{
@@ -417,12 +496,6 @@ export type RichText = Array<
       _key: string;
     }
 >;
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
 
 export type Cta = {
   _type: "cta";
@@ -473,19 +546,6 @@ export type Home = {
   >;
   seo?: Seo;
   openGraph?: OpenGraph;
-};
-
-export type OpenGraph = {
-  _type: "openGraph";
-  title?: string;
-  description?: string;
-  image?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
 };
 
 export type Page = {
@@ -642,23 +702,6 @@ export type NestedModalLevel1 = {
   >;
 };
 
-export type WorkflowStatus =
-  | "draft"
-  | "in-review"
-  | "approved"
-  | "published"
-  | "rejected";
-
-export type WorkflowMetadata = {
-  _type: "workflowMetadata";
-  workflowStatus?: WorkflowStatus;
-  submittedAt?: string;
-  submittedBy?: string;
-  approvedAt?: string;
-  approvedBy?: string;
-  rejectionReason?: string;
-};
-
 export type Blog = {
   _id: string;
   _type: "blog";
@@ -669,7 +712,7 @@ export type Blog = {
   description: string;
   slug: Slug;
   publishedAt: string;
-  image: {
+  image?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -775,14 +818,14 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   source?: SanityAssetSourceData;
 };
 
@@ -804,14 +847,14 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
 };
@@ -834,31 +877,32 @@ export type AllSanitySchemaTypes =
   | TextMedia
   | Features
   | Hero
-  | PromoBanner
+  | Counter
+  | ProductAutoIncrement
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Slug
+  | BlogReference
   | PageReference
+  | Product
+  | OpenGraph
+  | Seo
+  | PromoBanner
   | HomeReference
   | Link
   | MaintenanceBanner
   | Footer
-  | SanityImageCrop
-  | SanityImageHotspot
   | Navigation
   | Redirect
   | Changelog
-  | Seo
-  | BlogReference
   | RichText
-  | Slug
   | Cta
   | Home
-  | OpenGraph
   | Page
   | NestedModalTestRichText
   | NestedModalLevel3
   | NestedModalLevel2
   | NestedModalLevel1
-  | WorkflowStatus
-  | WorkflowMetadata
   | Blog
   | SanityVideoMetadataPlayback
   | SanityVideoMetadata
@@ -899,7 +943,7 @@ export type BLOG_POSTS_RESULT = Array<{
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
     alt: null;
-  };
+  } | null;
   publishedAt: string;
   seoNoIndex: boolean | null;
   seoHideFromLists: boolean | null;
@@ -929,7 +973,7 @@ export type BLOG_POST_RESULT = {
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
     alt: null;
-  };
+  } | null;
   publishedAt: string;
   content: RichText;
   seo: {
@@ -978,7 +1022,7 @@ export type BLOG_CARD_RESULT = Array<{
         blurHash: string | null;
       } | null;
     } | null;
-  };
+  } | null;
   publishedAt: string;
 }>;
 
@@ -1152,14 +1196,14 @@ export type HOME_RESULT = {
             title?: string;
             description?: string;
             altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
             uploadId?: string;
-            path?: string;
-            url?: string;
+            path: string;
+            url: string;
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
@@ -1204,14 +1248,14 @@ export type HOME_RESULT = {
               title?: string;
               description?: string;
               altText?: string;
-              sha1hash?: string;
-              extension?: string;
-              mimeType?: string;
-              size?: number;
-              assetId?: string;
+              sha1hash: string;
+              extension: string;
+              mimeType: string;
+              size: number;
+              assetId: string;
               uploadId?: string;
-              path?: string;
-              url?: string;
+              path: string;
+              url: string;
               metadata?: SanityImageMetadata;
               source?: SanityAssetSourceData;
             } | null;
@@ -1240,14 +1284,14 @@ export type HOME_RESULT = {
             title?: string;
             description?: string;
             altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
             uploadId?: string;
-            path?: string;
-            url?: string;
+            path: string;
+            url: string;
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
@@ -1413,14 +1457,14 @@ export type PAGE_BY_SLUG_RESULT = {
             title?: string;
             description?: string;
             altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
             uploadId?: string;
-            path?: string;
-            url?: string;
+            path: string;
+            url: string;
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
@@ -1465,14 +1509,14 @@ export type PAGE_BY_SLUG_RESULT = {
               title?: string;
               description?: string;
               altText?: string;
-              sha1hash?: string;
-              extension?: string;
-              mimeType?: string;
-              size?: number;
-              assetId?: string;
+              sha1hash: string;
+              extension: string;
+              mimeType: string;
+              size: number;
+              assetId: string;
               uploadId?: string;
-              path?: string;
-              url?: string;
+              path: string;
+              url: string;
               metadata?: SanityImageMetadata;
               source?: SanityAssetSourceData;
             } | null;
@@ -1501,14 +1545,14 @@ export type PAGE_BY_SLUG_RESULT = {
             title?: string;
             description?: string;
             altText?: string;
-            sha1hash?: string;
-            extension?: string;
-            mimeType?: string;
-            size?: number;
-            assetId?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
             uploadId?: string;
-            path?: string;
-            url?: string;
+            path: string;
+            url: string;
             metadata?: SanityImageMetadata;
             source?: SanityAssetSourceData;
           } | null;
@@ -1618,7 +1662,7 @@ export type SEMANTIC_SEARCH_RESULT = Array<{
       } | null;
     } | null;
     alt: null;
-  };
+  } | null;
 }>;
 
 // Source: ../web/src/lib/sanity/queries.ts
