@@ -165,6 +165,20 @@ export const CONTENT_STATS_QUERY = /* groq */ `{
 }`
 
 /**
+ * Fetch menu items with images — shows both _ref and resolved asset->url.
+ * Used by /admin/image-url to demonstrate that no extra API call is made.
+ */
+export const MENU_ITEMS_WITH_IMAGES_QUERY = /* groq */ `
+  *[_type == "menuItem" && defined(heroImage.asset)] | order(displayOrder asc) [0...6] {
+    _id,
+    marketingName,
+    "imageRef": heroImage.asset._ref,
+    "imageResolvedUrl": heroImage.asset->url,
+    "imageAlt": heroImage.alt
+  }
+`
+
+/**
  * Fetch all regions
  */
 export const ALL_REGIONS_QUERY = /* groq */ `

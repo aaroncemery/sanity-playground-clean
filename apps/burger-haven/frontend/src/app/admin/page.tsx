@@ -31,19 +31,31 @@ export default async function AdminDashboardPage() {
               <h1 className="text-2xl font-black text-bh-gold">🍔 Burger Haven</h1>
               <p className="text-gray-400 text-sm">Admin Dashboard — PIM Integration Demo</p>
             </div>
-            <nav className="flex items-center gap-4 text-sm">
+            <nav className="flex items-center gap-3 text-sm">
               <Link href="/" className="text-gray-400 hover:text-white transition-colors">
                 ← Menu Board
               </Link>
               <Link
-                href="/admin/validation"
-                className="bg-bh-red hover:bg-bh-red-dark text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                href="/admin/validators"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg font-medium transition-colors"
               >
-                ⚡ Validation Demo
+                🧪 Validators
+              </Link>
+              <Link
+                href="/admin/image-url"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg font-medium transition-colors"
+              >
+                🖼️ Image URLs
+              </Link>
+              <Link
+                href="/admin/validation"
+                className="bg-bh-red hover:bg-bh-red-dark text-white px-3 py-2 rounded-lg font-medium transition-colors"
+              >
+                ⚡ Functions
               </Link>
               <Link
                 href="/admin/sync-demo"
-                className="bg-bh-gold hover:bg-yellow-500 text-bh-dark px-4 py-2 rounded-lg font-medium transition-colors"
+                className="bg-bh-gold hover:bg-yellow-500 text-bh-dark px-3 py-2 rounded-lg font-medium transition-colors"
               >
                 🔄 Sync Demo
               </Link>

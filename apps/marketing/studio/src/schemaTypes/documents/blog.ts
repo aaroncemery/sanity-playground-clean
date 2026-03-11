@@ -106,7 +106,6 @@ export const blog = defineType({
       description:
         'The main image of the post. This will be displayed in the post list and on the post page.',
       group: GROUP.MAIN_CONTENT,
-      validation: (rule) => rule.required().error('A main image is required'),
       options: {
         hotspot: true,
       },
