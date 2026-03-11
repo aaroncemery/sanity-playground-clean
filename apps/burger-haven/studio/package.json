@@ -9,6 +9,7 @@
     "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
+    "@repo/burger-haven-validators": "workspace:*",
     "lucide-react": "^0.511.0",
     "@sanity/vision": "^5.11.0",
     "react": "^19.2.3",

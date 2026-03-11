@@ -10,8 +10,6 @@ import {footer} from './footer'
 import {product} from './product'
 import {productAutoIncrement} from './product-auto-increment'
 import {counter} from './counter'
-import {workflowMetadata} from './workflow-metadata'
-
 export const documents = [
   home,
   changelog,
@@ -25,5 +23,4 @@ export const documents = [
   product,
   productAutoIncrement,
   counter,
-  workflowMetadata,
 ]

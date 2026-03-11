@@ -1,6 +1,17 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {ShoppingBasket} from 'lucide-react'
 
+// DEMO: validation rules imported from shared package — same logic runs in Studio and in Functions
+import {
+  skuValidation,
+  allergensValidation,
+  nutritionFactsValidation,
+  caloriesValidation,
+  nutritionMacroValidation,
+  basePriceValidation,
+  productNameValidation,
+} from '@repo/burger-haven-validators'
+
 export const product = defineType({
   name: 'product',
   type: 'document',
@@ -13,13 +24,7 @@ export const product = defineType({
       type: 'string',
       title: 'SKU',
       description: 'Product identifier from PIM (e.g., BH1001)',
-      validation: (Rule) =>
-        Rule.required()
-          .regex(/^[A-Z]{2}\d{4}$/, {
-            name: 'SKU format',
-            invert: false,
-          })
-          .error('SKU must be format: XX0000 (e.g., BH1001)'),
+      validation: skuValidation,
     }),
     defineField({
       name: 'pimProductId',
@@ -33,7 +38,7 @@ export const product = defineType({
       type: 'string',
       title: 'Product Name',
       description: 'Internal product name from PIM',
-      validation: (Rule) => Rule.required(),
+      validation: productNameValidation,
     }),
     defineField({
       name: 'category',
@@ -55,7 +60,7 @@ export const product = defineType({
       type: 'number',
       title: 'Base Price',
       description: 'Default price from PIM (can be overridden by location pricing)',
-      validation: (Rule) => Rule.required().min(0).max(100),
+      validation: basePriceValidation,
     }),
     defineField({
       name: 'allergens',
@@ -64,8 +69,7 @@ export const product = defineType({
       title: 'Allergens',
       description:
         '⚠️ CRITICAL: Must be provided by PIM. Functions will reject writes without this.',
-      validation: (Rule) =>
-        Rule.required().min(1).error('Allergen information is REQUIRED for compliance'),
+      validation: allergensValidation,
       options: {
         list: [
           {title: '🥛 Dairy', value: 'dairy'},
@@ -85,37 +89,37 @@ export const product = defineType({
       type: 'object',
       title: 'Nutrition Facts',
       description: '⚠️ Required by Functions for compliance',
-      validation: (Rule) => Rule.required().error('Nutrition facts are REQUIRED'),
+      validation: nutritionFactsValidation,
       fields: [
         defineField({
           name: 'calories',
           type: 'number',
           title: 'Calories',
-          validation: (Rule) => Rule.required().min(0).max(3000),
+          validation: caloriesValidation,
         }),
         defineField({
           name: 'protein',
           type: 'number',
           title: 'Protein (g)',
-          validation: (Rule) => Rule.min(0),
+          validation: nutritionMacroValidation('Protein'),
         }),
         defineField({
           name: 'carbs',
           type: 'number',
           title: 'Carbohydrates (g)',
-          validation: (Rule) => Rule.min(0),
+          validation: nutritionMacroValidation('Carbohydrates'),
         }),
         defineField({
           name: 'fat',
           type: 'number',
           title: 'Fat (g)',
-          validation: (Rule) => Rule.min(0),
+          validation: nutritionMacroValidation('Fat'),
         }),
         defineField({
           name: 'sodium',
           type: 'number',
           title: 'Sodium (mg)',
-          validation: (Rule) => Rule.min(0),
+          validation: nutritionMacroValidation('Sodium'),
         }),
       ],
     }),

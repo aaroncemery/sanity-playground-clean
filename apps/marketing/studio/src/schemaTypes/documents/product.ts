@@ -116,33 +116,14 @@ export const product = defineType({
       title: 'Open Graph',
       group: GROUP.OG,
     }),
-    defineField({
-      name: 'workflowMetadata',
-      type: 'workflowMetadata',
-      group: GROUP.WORKFLOW,
-    }),
   ],
   preview: {
     select: {
       title: 'title',
-      status: 'workflowMetadata.workflowStatus',
     },
-    prepare(selection) {
-      const {title, status} = selection
-      const statusEmojis: Record<string, string> = {
-        draft: '📝',
-        'in-review': '👀',
-        approved: '✅',
-        published: '🚀',
-        rejected: '❌',
-      }
-
-      const formattedStatus = status
-        ? status.charAt(0).toUpperCase() + status.slice(1).replace(/-/g, ' ')
-        : 'Draft'
+    prepare({title}: Record<string, any>) {
       return {
         title: title || 'Untitled',
-        subtitle: `${statusEmojis[status as keyof typeof statusEmojis] || '📝'} ${formattedStatus}`,
       }
     },
   },

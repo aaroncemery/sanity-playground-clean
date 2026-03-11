@@ -2,7 +2,6 @@
 
 import type {StructureResolver} from 'sanity/structure'
 import {ContentChecklistPane} from '../components/ContentChecklistPane'
-import {IncomingReferencesPane} from '../components/IncomingReferencesPane'
 import {ReleaseInfoPane} from '../components/ReleaseInfoPane'
 
 export const structure: StructureResolver = (S) =>
@@ -51,8 +50,6 @@ export const structure: StructureResolver = (S) =>
                   S.view.form().title('Editor'),
                   // DEMO: S.document().defaultPanes() — custom Release Info pane
                   S.view.component(ReleaseInfoPane).title('Release Info'),
-                  // DEMO: incoming references view
-                  S.view.component(IncomingReferencesPane).title('Incoming Refs'),
                 ]),
             ),
         ),
@@ -75,30 +72,15 @@ export const structure: StructureResolver = (S) =>
                   S.view.form().title('Editor'),
                   // DEMO: S.document().defaultPanes() — content checklist beside the editor
                   S.view.component(ContentChecklistPane).title('Checklist'),
-                  // DEMO: incoming references view
-                  S.view.component(IncomingReferencesPane).title('Incoming Refs'),
                 ]),
             ),
         ),
 
-      // Products with incoming references view
+      // Products
       S.listItem()
         .title('Products')
         .icon(() => '🛍️')
-        .child(
-          S.documentTypeList('product')
-            .title('Products')
-            .child((docId) =>
-              S.document()
-                .schemaType('product')
-                .documentId(docId)
-                .views([
-                  S.view.form().title('Editor'),
-                  // DEMO: incoming references view
-                  S.view.component(IncomingReferencesPane).title('Incoming Refs'),
-                ]),
-            ),
-        ),
+        .child(S.documentTypeList('product').title('Products')),
 
       S.divider(),
 

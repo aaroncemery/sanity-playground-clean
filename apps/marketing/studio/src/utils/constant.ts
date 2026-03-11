@@ -1,4 +1,4 @@
-import {CogIcon, SearchIcon} from 'lucide-react'
+import {SearchIcon} from 'lucide-react'
 import type {FieldGroupDefinition} from 'sanity'
 import {ALL_FIELDS_GROUP} from 'sanity'
 
@@ -8,7 +8,6 @@ export const GROUP = {
   CARD: 'card',
   RELATED: 'related',
   OG: 'og',
-  WORKFLOW: 'workflow',
 }
 
 export const GROUPS: FieldGroupDefinition[] = [
@@ -29,10 +28,5 @@ export const GROUPS: FieldGroupDefinition[] = [
   {
     name: GROUP.OG,
     title: 'Open Graph',
-  },
-  {
-    name: GROUP.WORKFLOW,
-    icon: CogIcon,
-    title: 'Workflow',
   },
 ]

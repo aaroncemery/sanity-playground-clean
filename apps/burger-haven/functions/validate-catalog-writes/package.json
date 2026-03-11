@@ -1,0 +1,9 @@
+{
+  "name": "@jitb/validate-catalog-writes",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/burger-haven-validators": "workspace:*",
+    "@sanity/functions": "^1.0.3"
+  }
+}

@@ -26,7 +26,7 @@ export const menuItem = defineType({
         },
       ],
       dataset: 'productcatalog',
-      validation: (Rule) => Rule.required(),
+      validation: (Rule: any) => Rule.required(),
     }),
     defineField({
       name: 'marketingName',
@@ -130,7 +130,7 @@ export const menuItem = defineType({
       media: 'heroImage',
       featured: 'featured',
     },
-    prepare({title, media, featured}: {title?: string; media?: unknown; featured?: boolean}) {
+    prepare({title, media, featured}: Record<string, any>) {
       return {
         title: featured ? `⭐ ${title}` : (title || 'Unnamed Item'),
         subtitle: featured ? 'Featured Item' : 'Menu Item',

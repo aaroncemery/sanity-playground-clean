@@ -60,7 +60,7 @@ export const seasonalCampaign = defineType({
       launchDate: 'launchDate',
       media: 'heroImage',
     },
-    prepare({title, launchDate, media}: {title?: string; launchDate?: string; media?: unknown}) {
+    prepare({title, launchDate, media}: Record<string, any>) {
       return {
         title: title || 'Untitled Campaign',
         subtitle: launchDate ? `Launches ${launchDate}` : 'No launch date',

@@ -2,16 +2,24 @@ import Link from 'next/link'
 import {DataFlowDiagram} from '@/components/Admin/DataFlowDiagram'
 import {SyncStatusCard, RecentActivity} from '@/components/Admin/SyncStatusCard'
 import {catalogClient, contentClient} from '@/lib/sanity'
-import {CATALOG_STATS_QUERY, CONTENT_STATS_QUERY} from '@/lib/queries'
+import {CATALOG_STATS_QUERY, CONTENT_STATS_QUERY, ALL_MENU_ITEMS_QUERY, ALL_PRODUCTS_QUERY} from '@/lib/queries'
+import {resolveMenuItemsWithProducts} from '@/lib/resolveMenuItems'
+import type {CatalogProduct} from '@/lib/types/menuItem'
 import type {CatalogStats, ContentStats} from '@/lib/types'
 
 export const revalidate = 30
 
 export default async function AdminDashboardPage() {
-  const [catalogStats, contentStats] = await Promise.all([
+  const [catalogStats, contentStats, menuItemsRaw, products] = await Promise.all([
     catalogClient.fetch<CatalogStats>(CATALOG_STATS_QUERY),
     contentClient.fetch<ContentStats>(CONTENT_STATS_QUERY),
+    contentClient.fetch<Array<{_id: string; marketingName: string; productRef?: string; [key: string]: unknown}>>(ALL_MENU_ITEMS_QUERY),
+    catalogClient.fetch<CatalogProduct[]>(ALL_PRODUCTS_QUERY),
   ])
+
+  // DEMO: cross-dataset join — two fetches merged at the application layer
+  // typegen can't resolve crossDatasetReference fields automatically (see lib/types/menuItem.ts)
+  const resolvedMenuItems = resolveMenuItemsWithProducts(menuItemsRaw, products)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,6 +62,54 @@ export default async function AdminDashboardPage() {
         {/* Recent activity */}
         <RecentActivity catalogStats={catalogStats} contentStats={contentStats} />
 
+        {/* Cross-dataset resolved menu items */}
+        <div className="mt-8 bg-white rounded-xl shadow p-5">
+          <h3 className="font-bold text-gray-900 mb-1">🔗 Menu Items — Resolved Cross-Dataset</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Two fetches (customercontent + productcatalog) merged at the application layer.
+            Typegen cannot resolve <code className="bg-gray-100 px-1 rounded">crossDatasetReference</code> fields automatically — see{' '}
+            <code className="bg-gray-100 px-1 rounded">src/lib/types/menuItem.ts</code>.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left text-gray-500">
+                  <th className="pb-2 pr-4 font-medium">Marketing Name</th>
+                  <th className="pb-2 pr-4 font-medium">SKU</th>
+                  <th className="pb-2 pr-4 font-medium">Catalog Name</th>
+                  <th className="pb-2 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resolvedMenuItems.map((item) => (
+                  <tr key={item._id} className="border-b last:border-0">
+                    <td className="py-2 pr-4 font-medium text-gray-900">
+                      {item.marketingName}
+                    </td>
+                    <td className="py-2 pr-4 font-mono text-gray-600">
+                      {item.product?.sku ?? <span className="text-gray-300">—</span>}
+                    </td>
+                    <td className="py-2 pr-4 text-gray-600">
+                      {item.product?.name ?? <span className="text-gray-300">—</span>}
+                    </td>
+                    <td className="py-2">
+                      {item.product ? (
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                          resolved
+                        </span>
+                      ) : (
+                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+                          no ref
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         {/* Studio links */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white rounded-xl shadow p-5 border-l-4 border-blue-400">
@@ -93,7 +149,7 @@ export default async function AdminDashboardPage() {
               {
                 icon: '⚡',
                 title: 'Functions enforce validation on ALL writes',
-                desc: 'External PIM can\'t bypass business rules — API, Studio, webhooks all go through Functions',
+                desc: "External PIM can't bypass business rules — API, Studio, webhooks all go through Functions",
               },
               {
                 icon: '🔗',
