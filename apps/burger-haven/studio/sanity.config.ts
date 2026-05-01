@@ -6,7 +6,14 @@ import {visionTool} from '@sanity/vision'
 import {product, productPricing, storeLocation, pimSyncLog} from './src/schemaTypes/catalog'
 
 // Customer Content schemas (marketing enrichment)
-import {menuItem, promotion, seasonalCampaign, region} from './src/schemaTypes/content'
+import {
+  menuItem,
+  promotion,
+  seasonalCampaign,
+  region,
+  offerRule,
+  upgradeMap,
+} from './src/schemaTypes/content'
 
 export default defineConfig([
   // ============================================================
@@ -49,7 +56,7 @@ export default defineConfig([
     ],
 
     schema: {
-      types: [menuItem, promotion, seasonalCampaign, region],
+      types: [menuItem, promotion, seasonalCampaign, region, offerRule, upgradeMap],
     },
   },
 

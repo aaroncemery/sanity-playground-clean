@@ -101,6 +101,12 @@ export default function MenuBoardPage() {
               Featured
             </a>
             <Link
+              href="/cart-demo"
+              className="text-xs bg-bh-red/20 hover:bg-bh-red/30 text-bh-red-light hover:text-white px-4 py-2 rounded-full transition-all border border-bh-red/30"
+            >
+              🛍️ JitB Upsell Demo
+            </Link>
+            <Link
               href="/admin"
               className="text-xs bg-white/10 hover:bg-white/20 text-white/80 hover:text-white px-4 py-2 rounded-full transition-all border border-white/10"
             >

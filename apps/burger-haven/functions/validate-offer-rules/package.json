@@ -1,0 +1,8 @@
+{
+  "name": "@jitb/validate-offer-rules",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sanity/functions": "^1.0.3"
+  }
+}

@@ -212,3 +212,105 @@ export const REGION_LABELS: Record<string, string> = {
   georgia: 'Georgia',
   texas: 'Texas',
 }
+
+// ============================================================
+// JITB UPSELL — OFFER RULE TYPES
+// ============================================================
+
+export type Channel = 'mobile' | 'web' | 'kiosk'
+export type Daypart = 'breakfast' | 'lunch' | 'dinner' | 'lateNight'
+export type RewardType =
+  | 'percentOff'
+  | 'dollarOff'
+  | 'freeItem'
+  | 'bonusPoints'
+  | 'comboUpgrade'
+
+export interface OfferRuleRewardItem {
+  _id: string
+  marketingName: string
+  heroImage?: SanityImage
+  productRef?: string
+}
+
+export interface OfferRuleTier {
+  label?: string
+  lowerBound: number
+  target: number
+  rewardType: RewardType
+  rewardValue?: number
+  rewardItem?: OfferRuleRewardItem
+}
+
+export interface OfferRuleCopyVariant {
+  variantId: string
+  headline: string
+  body?: string
+  cta?: string
+}
+
+export interface OfferRuleSuggestedProduct {
+  _id: string
+  marketingName: string
+  tagline?: string
+  heroImage?: SanityImage
+  badges?: string[]
+  productRef?: string
+}
+
+export interface OfferRule {
+  _id: string
+  name: string
+  priority?: number
+  marginFloor?: number
+  channels?: Channel[]
+  dayparts?: Daypart[]
+  tiers: OfferRuleTier[]
+  copyVariants: OfferRuleCopyVariant[]
+  suggestedProducts?: OfferRuleSuggestedProduct[]
+}
+
+export interface EmbeddingsRecommendation {
+  _id: string
+  marketingName: string
+  tagline?: string
+  description?: string
+  heroImage?: SanityImage
+  badges?: string[]
+  productRef?: string
+  _score: number
+}
+
+export interface UpgradeMap {
+  _id: string
+  name: string
+  priceDelta: number
+  bonusCopy?: string
+  sourceItem?: OfferRuleRewardItem
+  upgradeItem?: OfferRuleRewardItem
+}
+
+// ============================================================
+// CART SIMULATION TYPES
+// ============================================================
+
+export interface CartLine {
+  menuItemId: string
+  marketingName: string
+  unitPrice: number
+  qty: number
+  category?: string
+  heroImage?: SanityImage
+}
+
+export interface ResolvedNudge {
+  rule: OfferRule
+  tier: OfferRuleTier
+  variant: OfferRuleCopyVariant
+  gap: number
+  headline: string
+  body?: string
+  cta?: string
+  unlocked: boolean
+  rewardLabel: string
+}

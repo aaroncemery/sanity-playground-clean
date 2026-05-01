@@ -28,5 +28,16 @@ export default defineBlueprint({
         projection: '{_id, _type, sku, pimMetadata}',
       },
     }),
+
+    // JITB POC: Validate marketer-controlled offer rules on every write.
+    // Runs for Studio, API, and Vision writes — no bypass possible.
+    defineDocumentFunction({
+      name: 'validate-offer-rules',
+      event: {
+        on: ['create', 'update'],
+        filter: 'dataset == "customercontent" && _type == "offerRule"',
+        projection: '{_id, _type, name, enabled, marginFloor, tiers, copyVariants}',
+      },
+    }),
   ],
 })

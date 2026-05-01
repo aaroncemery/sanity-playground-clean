@@ -189,3 +189,101 @@ export const ALL_REGIONS_QUERY = /* groq */ `
     states
   }
 `
+
+// ============================================================
+// JITB UPSELL — OFFER RULES (customercontent dataset)
+// ============================================================
+
+/**
+ * Fetch active offer rules. This is what the cart calls on bag open.
+ * Filters: enabled, channel match, daypart match, schedule window.
+ */
+export const ACTIVE_OFFER_RULES_QUERY = /* groq */ `
+  *[_type == "offerRule" && enabled == true
+    && ($channel in channels || count(channels) == 0)
+    && ($daypart in dayparts || count(dayparts) == 0)
+    && (!defined(scheduling.startDate) || dateTime(now()) >= dateTime(scheduling.startDate))
+    && (!defined(scheduling.endDate) || dateTime(now()) <= dateTime(scheduling.endDate))
+  ] | order(priority asc) {
+    _id,
+    name,
+    priority,
+    marginFloor,
+    channels,
+    dayparts,
+    tiers[] {
+      label,
+      lowerBound,
+      target,
+      rewardType,
+      rewardValue,
+      rewardItem->{
+        _id,
+        marketingName,
+        heroImage,
+        "productRef": product._ref
+      }
+    },
+    copyVariants[] {
+      variantId,
+      headline,
+      body,
+      cta
+    },
+    suggestedProducts[]->{
+      _id,
+      marketingName,
+      tagline,
+      heroImage,
+      badges,
+      "productRef": product._ref
+    }
+  }
+`
+
+/**
+ * Embeddings-powered semantic product recommendations.
+ * Requires Dataset Embeddings to be enabled on the dataset (CLI:
+ * `sanity dataset embeddings enable customercontent --projection='{...}'`).
+ *
+ * `text::semanticSimilarity()` takes a single string arg — the fields it
+ * matches against are defined by the dataset's embeddings projection, not here.
+ */
+export const EMBEDDINGS_RECOMMENDATIONS_QUERY = /* groq */ `
+  *[_type == "menuItem"] | score(
+    text::semanticSimilarity($cartContext)
+  ) | order(_score desc) [0...4] {
+    _id,
+    marketingName,
+    tagline,
+    description,
+    heroImage,
+    badges,
+    "productRef": product._ref,
+    _score
+  }
+`
+
+/**
+ * Fetch upgrade maps for the comboUpgrade reward variant.
+ */
+export const ACTIVE_UPGRADE_MAPS_QUERY = /* groq */ `
+  *[_type == "upgradeMap" && enabled == true] {
+    _id,
+    name,
+    priceDelta,
+    bonusCopy,
+    sourceItem->{
+      _id,
+      marketingName,
+      heroImage,
+      "productRef": product._ref
+    },
+    upgradeItem->{
+      _id,
+      marketingName,
+      heroImage,
+      "productRef": product._ref
+    }
+  }
+`
